@@ -8,8 +8,9 @@ __license__ = 'GNU General Public License v2 http://www.gnu.org/licenses/gpl2.ht
 import types
 import wx._core
 
-from rainbow.app.panels.attribute import AttributePanel
-from rainbow.app.panels.function import FunctionPanel
+from rainbow.app.panels.class_panel import ClassPanel
+from rainbow.app.panels.function_panel import FunctionPanel
+from rainbow.app.panels.attribute_panel import AttributePanel
 
 
 # Test classes
@@ -17,18 +18,18 @@ from rainbow.app.panels.function import FunctionPanel
 class A(object):
 
     def __init__(self):
-        self.value = True
+        self.value = 0
 
     def inc(self):
         self.value += 1
 
 
-class MyClass():
+class MyClass(object):
 
     def __init__(self):
-        self.a = 0
-        self.b = 0
-        self._c = 1
+        self.a = 1
+        self.b = 2
+        self._c = True
         self.cla = A()
 
     def add(self):
@@ -44,7 +45,7 @@ class Root():
     def __init__(self):
         # Load instances
         self.test1 = MyClass()
-        self.test2 = MyClass()
+        #self.test2 = A()
 
 root = Root()
 
@@ -52,33 +53,40 @@ root = Root()
 class MainWindow(wx.Frame):
 
     def __init__(self):
-        super(MainWindow, self).__init__(None, size=(800, 500), title="Rainbow 0.0.1")
+        super(MainWindow, self).__init__(None, size=(800, 600), title="Rainbow 0.0.1")
 
         # Elements
         self.tree_view = wx.TreeCtrl(
-            self, size=(200, -1), style=wx.TR_DEFAULT_STYLE | wx.TR_HIDE_ROOT | wx.TR_FULL_ROW_HIGHLIGHT)
+            self, size=(200, -1),
+            style=wx.TR_DEFAULT_STYLE | wx.TR_HIDE_ROOT | wx.TR_FULL_ROW_HIGHLIGHT)
         self.root_node = self.tree_view.AddRoot('Root')
-        self.attribute_panel = AttributePanel(self, root)
+        self.class_panel = ClassPanel(self, root)
         self.function_panel = FunctionPanel(self, root)
+        self.attribute_panel = AttributePanel(self, root)
 
         # Load tree images
         self.image_list = wx.ImageList(16, 16)
         self.class_image = self.image_list.Add(wx.Image(
-            "rainbow/app/images/class.png", wx.BITMAP_TYPE_PNG).Scale(16, 16).ConvertToBitmap())
+            "rainbow/app/images/class.png",
+            wx.BITMAP_TYPE_PNG).Scale(16, 16).ConvertToBitmap())
         self.function_image = self.image_list.Add(wx.Image(
-            "rainbow/app/images/function.png", wx.BITMAP_TYPE_PNG).Scale(16, 16).ConvertToBitmap())
+            "rainbow/app/images/function.png",
+            wx.BITMAP_TYPE_PNG).Scale(16, 16).ConvertToBitmap())
         self.attribute_image = self.image_list.Add(wx.Image(
-            "rainbow/app/images/attribute.png", wx.BITMAP_TYPE_PNG).Scale(16, 16).ConvertToBitmap())
+            "rainbow/app/images/attribute.png",
+            wx.BITMAP_TYPE_PNG).Scale(16, 16).ConvertToBitmap())
 
         # Layout
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         sizer.Add(self.tree_view, 0, wx.ALL | wx.EXPAND, 5)
-        sizer.Add(self.attribute_panel, 1, wx.ALL | wx.EXPAND, 5)
+        sizer.Add(self.class_panel, 1, wx.ALL | wx.EXPAND, 5)
         sizer.Add(self.function_panel, 1, wx.ALL | wx.EXPAND, 5)
+        sizer.Add(self.attribute_panel, 1, wx.ALL | wx.EXPAND, 5)
         self.SetSizer(sizer)
 
-        self.attribute_panel.Hide()
+        self.class_panel.Hide()
         self.function_panel.Hide()
+        self.attribute_panel.Hide()
         self.Layout()
 
         # Events
@@ -93,44 +101,45 @@ class MainWindow(wx.Frame):
         for key in dictionary.keys():
             if key[0] != '_':
                 instance = dictionary[key]
+                _type = type(instance)
 
                 # Object instances -> class type
                 # Non object instances -> types.InstanceType
-                if 'class' in str(type(instance)) or \
-                   type(instance) is types.InstanceType:
+                if 'class' in str(_type) or _type is types.InstanceType:
                     next_node = self.tree_view.AppendItem(node, key)
-                    self.tree_view.SetItemImage(next_node, self.class_image, wx.TreeItemIcon_Normal)
+                    self.tree_view.SetItemImage(
+                        next_node, self.class_image, wx.TreeItemIcon_Normal)
                     try:
                         self.fill_node(next_node, instance.__dict__)
                         self.fill_node(next_node, instance.__class__.__dict__)
                     except TypeError:
                         pass
-                elif type(instance) is types.FunctionType:
+                elif _type is types.FunctionType:
                     leave = self.tree_view.AppendItem(node, key)
                     self.tree_view.SetItemImage(leave, self.function_image, wx.TreeItemIcon_Normal)
-                else:
+                elif _type in [str, int, float, bool]:
                     leave = self.tree_view.AppendItem(node, key)
-                    self.tree_view.SetItemImage(leave, self.attribute_image, wx.TreeItemIcon_Normal)
-
-    def is_callable(self, item):
-        return hasattr(item, '__call__')
+                    self.tree_view.SetItemImage(
+                        leave, self.attribute_image, wx.TreeItemIcon_Normal)
 
     def on_item_selected(self, event):
         path = self.get_item_path(event.GetItem())
         instance = '.'.join(path)
         _type = type(eval('root.' + instance))
 
-        self.attribute_panel.Hide()
+        self.class_panel.Hide()
         self.function_panel.Hide()
+        self.attribute_panel.Hide()
 
-        if _type in [str, int, float, bool]:
-            self.attribute_panel.set_item(instance)
-            self.attribute_panel.Show()
-        elif _type is types.MethodType:
+        if 'class' in str(_type) or _type is types.InstanceType:
+            self.class_panel.set_item(instance)
+            self.class_panel.Show()
+        elif _type is types.MethodType or _type is types.FunctionType:
             self.function_panel.set_item(instance)
             self.function_panel.Show()
-        elif _type is types.InstanceType:
-            pass
+        elif _type in [str, int, float, bool]:
+            self.attribute_panel.set_item(instance)
+            self.attribute_panel.Show()
 
         self.Layout()
 

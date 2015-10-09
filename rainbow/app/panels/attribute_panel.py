@@ -14,37 +14,37 @@ class AttributePanel(wx.Panel):
         wx.Panel.__init__(self, parent)
 
         self.root = root
-        # self.SetBackgroundColour(wx.GREEN)
+        #self.SetBackgroundColour('#FFFF00')
 
         self.title = wx.StaticText(self, label='Attribute')
-        self.title.SetFont((wx.Font(13, wx.FONTFAMILY_DEFAULT, wx.NORMAL, wx.FONTWEIGHT_NORMAL)))
+        self.title.SetFont(wx.Font(11, wx.FONTFAMILY_DEFAULT, wx.NORMAL, wx.FONTWEIGHT_NORMAL))
         self.panel = wx.Panel(self)
         self.text_box = wx.TextCtrl(self.panel)
-        # self.button_get = wx.Button(self.panel, label='Get')
+        self.button_get = wx.Button(self.panel, label='Get')
         self.button_set = wx.Button(self.panel, label='Set')
 
         # Layout
         hsizer = wx.BoxSizer(wx.HORIZONTAL)
         hsizer.Add(self.text_box, 1, wx.ALL, 5)
-        # hsizer.Add(self.button_get, 0, wx.ALL, 5)
+        hsizer.Add(self.button_get, 0, wx.ALL, 5)
         hsizer.Add(self.button_set, 0, wx.ALL, 5)
         self.panel.SetSizer(hsizer)
 
         vsizer = wx.BoxSizer(wx.VERTICAL)
         vsizer.Add(self.title, 0, wx.ALL | wx.EXPAND, 5)
-        vsizer.Add(self.panel, 1, wx.TOP | wx.EXPAND, 10)
+        vsizer.Add(self.panel, 1, wx.TOP, 10)
         self.SetSizer(vsizer)
 
         self.Layout()
 
         # Events
-        # self.button_get.Bind(wx.EVT_BUTTON, self.on_get_button_pressed)
+        self.button_get.Bind(wx.EVT_BUTTON, self.on_get_button_pressed)
         self.button_set.Bind(wx.EVT_BUTTON, self.on_set_button_pressed)
 
     def set_item(self, instance):
         self.instance = 'self.root.' + instance
         self.title.SetLabel(
-            'Attribute: ' + instance + ' <' + str(type(eval(self.instance)))[7:-2] + '>')
+            'Attribute:  ' + instance)  # + '  <' + str(type(eval(self.instance)))[7:-2] + '>')
         self.on_get_button_pressed(None)
 
     def on_get_button_pressed(self, event):
