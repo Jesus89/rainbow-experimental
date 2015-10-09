@@ -13,7 +13,7 @@ sudo apt-get install python-wxgtk2.8
 ## Execute
 
 * Include your modules here: rainbow/modules
-* Import and load your modules here: rainbow/modules/root.py
+* Import and load your modules here: rainbow/modules/__init__.py
 * Launch Rainbow
 
 ```bash
