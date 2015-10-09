@@ -10,24 +10,23 @@ import wx._core
 
 class AttributePanel(wx.Panel):
 
-    def __init__(self, parent, cls):
+    def __init__(self, parent, root):
         wx.Panel.__init__(self, parent)
 
-        self.item = None
-        self.cls = cls
-        #self.SetBackgroundColour(wx.GREEN)
+        self.root = root
+        # self.SetBackgroundColour(wx.GREEN)
 
         self.title = wx.StaticText(self, label='Attribute')
         self.title.SetFont((wx.Font(13, wx.FONTFAMILY_DEFAULT, wx.NORMAL, wx.FONTWEIGHT_NORMAL)))
         self.panel = wx.Panel(self)
         self.text_box = wx.TextCtrl(self.panel)
-        #self.button_get = wx.Button(self.panel, label='Get')
+        # self.button_get = wx.Button(self.panel, label='Get')
         self.button_set = wx.Button(self.panel, label='Set')
 
         # Layout
         hsizer = wx.BoxSizer(wx.HORIZONTAL)
         hsizer.Add(self.text_box, 1, wx.ALL, 5)
-        #hsizer.Add(self.button_get, 0, wx.ALL, 5)
+        # hsizer.Add(self.button_get, 0, wx.ALL, 5)
         hsizer.Add(self.button_set, 0, wx.ALL, 5)
         self.panel.SetSizer(hsizer)
 
@@ -39,29 +38,32 @@ class AttributePanel(wx.Panel):
         self.Layout()
 
         # Events
-        #self.button_get.Bind(wx.EVT_BUTTON, self.on_get_button_pressed)
+        # self.button_get.Bind(wx.EVT_BUTTON, self.on_get_button_pressed)
         self.button_set.Bind(wx.EVT_BUTTON, self.on_set_button_pressed)
 
-    def set_item(self, item):
-        self.item = item
-        self.title.SetLabel('Attribute: ' + item)
+    def set_item(self, instance):
+        self.instance = 'self.root.' + instance
+        self.title.SetLabel(
+            'Attribute: ' + instance + ' <' + str(type(eval(self.instance)))[7:-2] + '>')
         self.on_get_button_pressed(None)
 
     def on_get_button_pressed(self, event):
-        self.text_box.SetValue(str(self.cls.__dict__[self.item]))
+        self.text_box.SetValue(str(eval(self.instance)))
 
     def on_set_button_pressed(self, event):
-        _type = type(self.cls.__dict__[self.item])
         value = self.text_box.GetValue()
+        _type = type(eval(self.instance))
 
         if _type is int:
-            self.cls.__dict__[self.item] = self.to_int(value)
+            exec(self.instance + '= self.to_int(value)')
         elif _type is float:
-            self.cls.__dict__[self.item] = self.to_float(value)
+            exec(self.instance + '= self.to_float(value)')
         elif _type is bool:
-            self.cls.__dict__[self.item] = self.to_bool(value)
+            exec(self.instance + '= self.to_bool(value)')
         elif _type is str:
-            self.cls.__dict__[self.item] = value
+            exec(self.instance + '= value')
+
+        self.on_get_button_pressed(None)
 
     def to_int(self, value):
         try:

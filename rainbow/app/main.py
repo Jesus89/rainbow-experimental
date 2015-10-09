@@ -5,6 +5,7 @@ __author__ = 'Jesús Arroyo Torrens <jesus.arroyo@bq.com>'
 __copyright__ = 'Copyright (C) 2015 Mundo Reader S.L.'
 __license__ = 'GNU General Public License v2 http://www.gnu.org/licenses/gpl2.html'
 
+import types
 import wx._core
 
 from rainbow.app.panels.attribute import AttributePanel
@@ -12,32 +13,46 @@ from rainbow.app.panels.function import FunctionPanel
 
 
 # Test class
-class MyClass(object):
+class A():
+    def __init__(self):
+        self.value = True
+
+class MyClass():
 
     def __init__(self):
         self.a = 0
-        self.b = False
-        self.c = 34.3
+        self.b = 0
+        self._c = 1
+        self.cla = A()
 
-    def add(self, x, y):
-        return x + y
+    def add(self):
+        return self.a + self.b
 
     def log(self):
-        print "log:", self.a, self.b, self.c
+        print "log:", self.a, self.b
 
-test_class = MyClass()
+
+# Root class
+class Root():
+
+    def __init__(self):
+        # Load instances
+        self.test1 = MyClass()
+        self.test2 = MyClass()
+
+root = Root()
 
 
 class MainWindow(wx.Frame):
 
     def __init__(self):
-        super(MainWindow, self).__init__(None, size=(600, 300), title="Rainbow 0.0.1")
+        super(MainWindow, self).__init__(None, size=(800, 400), title="Rainbow 0.0.1")
 
         self.tree_view = wx.TreeCtrl(
             self, size=(200, -1), style=wx.TR_DEFAULT_STYLE | wx.TR_HIDE_ROOT)
-        self.root = self.tree_view.AddRoot('Root')
-        self.attribute_panel = AttributePanel(self, test_class)
-        self.function_panel = FunctionPanel(self, test_class)
+        self.root_node = self.tree_view.AddRoot('Root')
+        self.attribute_panel = AttributePanel(self, root)
+        self.function_panel = FunctionPanel(self, root)
 
         # Layout
         sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -53,58 +68,48 @@ class MainWindow(wx.Frame):
         # Events
         self.tree_view.Bind(wx.EVT_TREE_SEL_CHANGED, self.on_item_selected)
 
-        # Att TestClass to TreeView
-        self.fill_tree_view(self.tree_view, test_class)
+        # Generate TreeView
+        self.fill_node(self.root_node, root.__dict__)
         self.tree_view.ExpandAll()
 
-    def fill_tree_view(self, tree_view, instance):
-        c = self.tree_view.AppendItem(self.root, instance.__class__.__name__)
+    def fill_node(self, node, dictionary):
+        for key in dictionary.keys():
+            if key[0] != '_':
+                instance = dictionary[key]
 
-        [self.tree_view.AppendItem(c, k) for (k, v) in instance.__dict__.iteritems()
-         if k[:1] != '_' and not self.is_callable(v)]
-
-        [self.tree_view.AppendItem(c, k) for (k, v) in instance.__class__.__dict__.iteritems()
-         if k[:1] != '_' and self.is_callable(v)]
+                if type(instance) is types.InstanceType:
+                    next_node = self.tree_view.AppendItem(node, key)
+                    self.fill_node(next_node, instance.__dict__)
+                    self.fill_node(next_node, instance.__class__.__dict__)
+                else:
+                    self.tree_view.AppendItem(node, key)
+                    #self.tree_view.SetItemData(leave, wx.TreeItemData(path))
 
     def is_callable(self, item):
         return hasattr(item, '__call__')
 
     def on_item_selected(self, event):
         path = self.get_item_path(event.GetItem())
-        item = self.tree_view.GetItemText(event.GetItem())
+        instance = '.'.join(path)
+        _type = type(eval('root.' + instance))
 
-        if self.is_attr(item):
-            self.attribute_panel.set_item(item)
+        self.attribute_panel.Hide()
+        self.function_panel.Hide()
+
+        if _type in [str, int, float, bool]:
+            self.attribute_panel.set_item(instance)
             self.attribute_panel.Show()
-            self.function_panel.Hide()
-
-        elif self.is_function(item):
-            self.function_panel.set_item(item)
-            self.attribute_panel.Hide()
+        elif _type is types.MethodType:
+            self.function_panel.set_item(instance)
             self.function_panel.Show()
+        elif _type is types.InstanceType:
+            pass
 
         self.Layout()
 
-    def is_attr(self, item):
-        if item in test_class.__dict__.keys():
-            _type = type(test_class.__dict__[item])
-            if _type in [str, int, float, bool]:
-                return True
-            return False
-        return False
-
-    def is_function(self, item):
-        if item in test_class.__class__.__dict__.keys():
-            _type = type(test_class.__class__.__dict__[item])
-            if str(_type) == "<type 'function'>":
-                return True
-            return False
-        return False
-
     def get_item_path(self, item):
-        pieces = []
+        path = []
         while self.tree_view.GetItemParent(item):
-            piece = self.tree_view.GetItemText(item)
-            pieces.insert(0, piece)
+            path = [self.tree_view.GetItemText(item)] + path
             item = self.tree_view.GetItemParent(item)
-        return str(pieces)
+        return path

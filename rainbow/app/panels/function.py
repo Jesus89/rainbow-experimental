@@ -12,11 +12,10 @@ from rainbow.app.panels.attribute import AttributePanel
 
 class FunctionPanel(wx.Panel):
 
-    def __init__(self, parent, cls):
+    def __init__(self, parent, root):
         wx.Panel.__init__(self, parent)
 
-        self.item = None
-        self.cls = cls
+        self.root = root
         #self.SetBackgroundColour(wx.RED)
 
         self.title = wx.StaticText(self, label='Function')
@@ -36,12 +35,12 @@ class FunctionPanel(wx.Panel):
         # Events
         self.button_function.Bind(wx.EVT_BUTTON, self.on_function_button_pressed)
 
-    def set_item(self, item):
-        self.item = item
-        self.button_function.SetLabel(item)
-        self.title.SetLabel('Function: ' + item)
+    def set_item(self, instance):
+        self.instance = 'self.root.' + instance
+        self.title.SetLabel('Function: ' + instance)
+        self.button_function.SetLabel(instance.split('.')[-1])
         self.result.SetLabel('')
 
     def on_function_button_pressed(self, event):
-        ret = self.cls.__class__.__dict__[self.item](self.cls)
+        exec('ret = ' + self.instance + '()')
         self.result.SetLabel(str(ret))
