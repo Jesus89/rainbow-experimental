@@ -12,10 +12,16 @@ from rainbow.app.panels.attribute import AttributePanel
 from rainbow.app.panels.function import FunctionPanel
 
 
-# Test class
-class A():
+# Test classes
+
+class A(object):
+
     def __init__(self):
         self.value = True
+
+    def inc(self):
+        self.value += 1
+
 
 class MyClass():
 
@@ -29,7 +35,7 @@ class MyClass():
         return self.a + self.b
 
     def log(self):
-        print "log:", self.a, self.b
+        return "log:", self.a, self.b, self.cla.value
 
 
 # Root class
@@ -38,7 +44,7 @@ class Root():
     def __init__(self):
         # Load instances
         self.test1 = MyClass()
-        self.test2 = MyClass()
+        #self.test2 = MyClass()
 
 root = Root()
 
@@ -77,13 +83,18 @@ class MainWindow(wx.Frame):
             if key[0] != '_':
                 instance = dictionary[key]
 
-                if type(instance) is types.InstanceType:
+                # Object instances -> class type
+                # Non object instances -> types.InstanceType
+                if 'class' in str(type(instance)) or \
+                   type(instance) is types.InstanceType:
                     next_node = self.tree_view.AppendItem(node, key)
-                    self.fill_node(next_node, instance.__dict__)
-                    self.fill_node(next_node, instance.__class__.__dict__)
+                    try:
+                        self.fill_node(next_node, instance.__dict__)
+                        self.fill_node(next_node, instance.__class__.__dict__)
+                    except TypeError:
+                        pass
                 else:
                     self.tree_view.AppendItem(node, key)
-                    #self.tree_view.SetItemData(leave, wx.TreeItemData(path))
 
     def is_callable(self, item):
         return hasattr(item, '__call__')
