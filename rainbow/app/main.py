@@ -12,48 +12,15 @@ from rainbow.app.panels.class_panel import ClassPanel
 from rainbow.app.panels.function_panel import FunctionPanel
 from rainbow.app.panels.attribute_panel import AttributePanel
 
-
-# Test classes
-
-class A(object):
-
-    def __init__(self):
-        self.value = 0
-
-    def inc(self):
-        self.value += 1
-
-
-class MyClass(object):
-
-    def __init__(self):
-        self.a = 1
-        self.b = 2
-        self._c = True
-        self.cla = A()
-
-    def add(self):
-        return self.a + self.b
-
-    def log(self):
-        return "log:", self.a, self.b, self.cla.value
-
-
-# Root class
-class Root():
-
-    def __init__(self):
-        # Load instances
-        self.test1 = MyClass()
-        #self.test2 = A()
-
+from rainbow.modules.root import Root
 root = Root()
 
+__version__ = "0.0.1"
 
 class MainWindow(wx.Frame):
 
     def __init__(self):
-        super(MainWindow, self).__init__(None, size=(800, 600), title="Rainbow 0.0.1")
+        super(MainWindow, self).__init__(None, size=(800, 600), title="Rainbow " + __version__)
 
         # Elements
         self.tree_view = wx.TreeCtrl(
