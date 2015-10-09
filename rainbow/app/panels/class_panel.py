@@ -42,8 +42,12 @@ class ClassPanel(wx.Panel):
 
         self.sizer.DeleteWindows()
         self.sizer.Clear()
-        exec('dictionary = ' + self.instance + '.__dict__.copy()')
-        exec('dictionary.update(' + self.instance + '.__class__.__dict__)')
+        exec('dictionary = ' + self.instance + '.__dict__')
+        self.fill_elements(instance, dictionary)
+        exec('dictionary = ' + self.instance + '.__class__.__dict__')
+        self.fill_elements(instance, dictionary)
+
+    def fill_elements(self, instance, dictionary):
         for k, v in dictionary.iteritems():
             if k[0] != '_':
                 _type = type(v)
