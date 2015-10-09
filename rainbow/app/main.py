@@ -44,7 +44,7 @@ class Root():
     def __init__(self):
         # Load instances
         self.test1 = MyClass()
-        #self.test2 = MyClass()
+        self.test2 = MyClass()
 
 root = Root()
 
@@ -52,13 +52,23 @@ root = Root()
 class MainWindow(wx.Frame):
 
     def __init__(self):
-        super(MainWindow, self).__init__(None, size=(800, 400), title="Rainbow 0.0.1")
+        super(MainWindow, self).__init__(None, size=(800, 500), title="Rainbow 0.0.1")
 
+        # Elements
         self.tree_view = wx.TreeCtrl(
-            self, size=(200, -1), style=wx.TR_DEFAULT_STYLE | wx.TR_HIDE_ROOT)
+            self, size=(200, -1), style=wx.TR_DEFAULT_STYLE | wx.TR_HIDE_ROOT | wx.TR_FULL_ROW_HIGHLIGHT)
         self.root_node = self.tree_view.AddRoot('Root')
         self.attribute_panel = AttributePanel(self, root)
         self.function_panel = FunctionPanel(self, root)
+
+        # Load tree images
+        self.image_list = wx.ImageList(16, 16)
+        self.class_image = self.image_list.Add(wx.Image(
+            "rainbow/app/images/class.png", wx.BITMAP_TYPE_PNG).Scale(16, 16).ConvertToBitmap())
+        self.function_image = self.image_list.Add(wx.Image(
+            "rainbow/app/images/function.png", wx.BITMAP_TYPE_PNG).Scale(16, 16).ConvertToBitmap())
+        self.attribute_image = self.image_list.Add(wx.Image(
+            "rainbow/app/images/attribute.png", wx.BITMAP_TYPE_PNG).Scale(16, 16).ConvertToBitmap())
 
         # Layout
         sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -75,6 +85,7 @@ class MainWindow(wx.Frame):
         self.tree_view.Bind(wx.EVT_TREE_SEL_CHANGED, self.on_item_selected)
 
         # Generate TreeView
+        self.tree_view.AssignImageList(self.image_list)
         self.fill_node(self.root_node, root.__dict__)
         self.tree_view.ExpandAll()
 
@@ -88,13 +99,18 @@ class MainWindow(wx.Frame):
                 if 'class' in str(type(instance)) or \
                    type(instance) is types.InstanceType:
                     next_node = self.tree_view.AppendItem(node, key)
+                    self.tree_view.SetItemImage(next_node, self.class_image, wx.TreeItemIcon_Normal)
                     try:
                         self.fill_node(next_node, instance.__dict__)
                         self.fill_node(next_node, instance.__class__.__dict__)
                     except TypeError:
                         pass
+                elif type(instance) is types.FunctionType:
+                    leave = self.tree_view.AppendItem(node, key)
+                    self.tree_view.SetItemImage(leave, self.function_image, wx.TreeItemIcon_Normal)
                 else:
-                    self.tree_view.AppendItem(node, key)
+                    leave = self.tree_view.AppendItem(node, key)
+                    self.tree_view.SetItemImage(leave, self.attribute_image, wx.TreeItemIcon_Normal)
 
     def is_callable(self, item):
         return hasattr(item, '__call__')
