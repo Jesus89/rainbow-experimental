@@ -1,5 +1,5 @@
 
-class A(object):
+class D(object):
 
     def __init__(self):
         self.value = 0
@@ -14,10 +14,10 @@ class MyClass(object):
         self.a = 1
         self.b = 2
         self._c = True
-        self.cla = A()
+        self.d = D()
 
     def add(self):
         return self.a + self.b
 
     def log(self):
-        return "log:", self.a, self.b, self.cla.value
+        return "log:", self.a, self.b

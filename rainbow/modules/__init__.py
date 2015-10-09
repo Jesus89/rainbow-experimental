@@ -13,8 +13,7 @@ class Root():
 
     def initialize(self):
         # Load your instances here:
-        self.test1 = rainbow.modules.example.MyClass()
-        self.test2 = rainbow.modules.example.A()
+        self.myclass = rainbow.modules.example.MyClass()
 
     def reload(self):
         reload(rainbow.modules.example)
