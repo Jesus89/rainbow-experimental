@@ -8,7 +8,7 @@ __license__ = 'GNU General Public License v2 http://www.gnu.org/licenses/gpl2.ht
 import types
 import wx._core
 
-from rainbow.app.panels.function_panel import FunctionPanel
+from rainbow.app.panels.method_panel import MethodPanel
 from rainbow.app.panels.attribute_panel import AttributePanel
 
 
@@ -61,9 +61,9 @@ class ClassPanel(wx.Panel):
                         wx.Font(11, wx.FONTFAMILY_DEFAULT, wx.NORMAL, wx.FONTWEIGHT_NORMAL))
                     self.sizer.Add(_class, 0, wx.ALL | wx.EXPAND, 15)
                 elif _type is types.MethodType or _type is types.FunctionType:
-                    function = FunctionPanel(self.panel, self.root)
-                    function.set_item(inst)
-                    self.sizer.Add(function, 0, wx.ALL | wx.EXPAND, 5)
+                    method = MethodPanel(self.panel, self.root)
+                    method.set_item(inst)
+                    self.sizer.Add(method, 0, wx.ALL | wx.EXPAND, 5)
                 elif _type in [str, int, float, bool]:
                     attribute = AttributePanel(self.panel, self.root)
                     attribute.set_item(inst)

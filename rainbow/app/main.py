@@ -9,7 +9,7 @@ import types
 import wx._core
 
 from rainbow.app.panels.class_panel import ClassPanel
-from rainbow.app.panels.function_panel import FunctionPanel
+from rainbow.app.panels.method_panel import MethodPanel
 from rainbow.app.panels.attribute_panel import AttributePanel
 
 from rainbow.modules import Root
@@ -33,7 +33,7 @@ class MainWindow(wx.Frame):
             self.panel, size=(200, -1),
             style=wx.TR_DEFAULT_STYLE | wx.TR_HIDE_ROOT | wx.TR_FULL_ROW_HIGHLIGHT)
         self.class_panel = ClassPanel(self.panel, root)
-        self.function_panel = FunctionPanel(self.panel, root)
+        self.method_panel = MethodPanel(self.panel, root)
         self.attribute_panel = AttributePanel(self.panel, root)
 
         # Load tree images
@@ -41,8 +41,8 @@ class MainWindow(wx.Frame):
         self.class_image = self.image_list.Add(wx.Image(
             'rainbow/app/images/class.png',
             wx.BITMAP_TYPE_PNG).Scale(16, 16).ConvertToBitmap())
-        self.function_image = self.image_list.Add(wx.Image(
-            'rainbow/app/images/function.png',
+        self.method_image = self.image_list.Add(wx.Image(
+            'rainbow/app/images/method.png',
             wx.BITMAP_TYPE_PNG).Scale(16, 16).ConvertToBitmap())
         self.attribute_image = self.image_list.Add(wx.Image(
             'rainbow/app/images/attribute.png',
@@ -53,7 +53,7 @@ class MainWindow(wx.Frame):
         hsizer = wx.BoxSizer(wx.HORIZONTAL)
         hsizer.Add(self.tree_view, 0, wx.ALL | wx.EXPAND, 5)
         hsizer.Add(self.class_panel, 1, wx.ALL | wx.EXPAND, 5)
-        hsizer.Add(self.function_panel, 1, wx.ALL | wx.EXPAND, 5)
+        hsizer.Add(self.method_panel, 1, wx.ALL | wx.EXPAND, 5)
         hsizer.Add(self.attribute_panel, 1, wx.ALL | wx.EXPAND, 5)
         self.panel.SetSizer(hsizer)
 
@@ -90,7 +90,7 @@ class MainWindow(wx.Frame):
                         pass
                 elif _type is types.MethodType or _type is types.FunctionType:
                     leave = self.tree_view.AppendItem(node, key)
-                    self.tree_view.SetItemImage(leave, self.function_image, wx.TreeItemIcon_Normal)
+                    self.tree_view.SetItemImage(leave, self.method_image, wx.TreeItemIcon_Normal)
                 elif _type in [str, int, float, bool]:
                     leave = self.tree_view.AppendItem(node, key)
                     self.tree_view.SetItemImage(
@@ -102,15 +102,15 @@ class MainWindow(wx.Frame):
         _type = type(eval('root.' + instance))
 
         self.class_panel.Hide()
-        self.function_panel.Hide()
+        self.method_panel.Hide()
         self.attribute_panel.Hide()
 
         if 'class' in str(_type) or _type is types.InstanceType:
             self.class_panel.set_item(instance)
             self.class_panel.Show()
         elif _type is types.MethodType or _type is types.FunctionType:
-            self.function_panel.set_item(instance)
-            self.function_panel.Show()
+            self.method_panel.set_item(instance)
+            self.method_panel.Show()
         elif _type in [str, int, float, bool]:
             self.attribute_panel.set_item(instance)
             self.attribute_panel.Show()
@@ -136,6 +136,6 @@ class MainWindow(wx.Frame):
         self.tree_view.ExpandAll()
         # Hide all panels
         self.class_panel.Hide()
-        self.function_panel.Hide()
+        self.method_panel.Hide()
         self.attribute_panel.Hide()
         self.Layout()
