@@ -16,5 +16,6 @@ class Root():
         self.myclass = rainbow.modules.example.MyClass()
 
     def reload(self):
+        # Reload your modules here:
         reload(rainbow.modules.example)
         self.initialize()

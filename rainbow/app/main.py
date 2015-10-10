@@ -7,6 +7,7 @@ __license__ = 'GNU General Public License v2 http://www.gnu.org/licenses/gpl2.ht
 
 import types
 import wx._core
+import wx.lib.scrolledpanel
 
 from rainbow.app.panels.class_panel import ClassPanel
 from rainbow.app.panels.method_panel import MethodPanel
@@ -28,13 +29,19 @@ class MainWindow(wx.Frame):
         self.refresh_tool = self.toolbar.AddLabelTool(
             wx.ID_ANY, '', wx.Bitmap('rainbow/app/images/refresh.png'))
         self.toolbar.Realize()
+
         self.panel = wx.Panel(self)
+
         self.tree_view = wx.TreeCtrl(
             self.panel, size=(200, -1),
             style=wx.TR_DEFAULT_STYLE | wx.TR_HIDE_ROOT | wx.TR_FULL_ROW_HIGHLIGHT)
-        self.class_panel = ClassPanel(self.panel, root)
-        self.method_panel = MethodPanel(self.panel, root)
-        self.attribute_panel = AttributePanel(self.panel, root)
+
+        self.control_panel = wx.lib.scrolledpanel.ScrolledPanel(self.panel)
+        self.control_panel.SetupScrolling(scroll_x=False, scrollIntoView=False)
+
+        self.class_panel = ClassPanel(self.control_panel, root)
+        self.method_panel = MethodPanel(self.control_panel, root)
+        self.attribute_panel = AttributePanel(self.control_panel, root)
 
         # Load tree images
         self.image_list = wx.ImageList(16, 16)
@@ -50,11 +57,15 @@ class MainWindow(wx.Frame):
         self.tree_view.AssignImageList(self.image_list)
 
         # Layout
+        contro_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        contro_sizer.Add(self.class_panel, 1, wx.ALL | wx.EXPAND, 5)
+        contro_sizer.Add(self.method_panel, 1, wx.ALL | wx.EXPAND, 5)
+        contro_sizer.Add(self.attribute_panel, 1, wx.ALL | wx.EXPAND, 5)
+        self.control_panel.SetSizer(contro_sizer)
+
         hsizer = wx.BoxSizer(wx.HORIZONTAL)
         hsizer.Add(self.tree_view, 0, wx.ALL | wx.EXPAND, 5)
-        hsizer.Add(self.class_panel, 1, wx.ALL | wx.EXPAND, 5)
-        hsizer.Add(self.method_panel, 1, wx.ALL | wx.EXPAND, 5)
-        hsizer.Add(self.attribute_panel, 1, wx.ALL | wx.EXPAND, 5)
+        hsizer.Add(self.control_panel, 1, wx.ALL | wx.EXPAND, 5)
         self.panel.SetSizer(hsizer)
 
         vsizer = wx.BoxSizer(wx.VERTICAL)
