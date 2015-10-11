@@ -20,6 +20,7 @@ class ClassPanel(wx.Panel):
         self.root = root
         #self.SetBackgroundColour(wx.BLUE)
 
+        # Elements
         self.title = wx.StaticText(self, label='Class')
         self.title.SetFont(wx.Font(11, wx.FONTFAMILY_DEFAULT, wx.NORMAL, wx.FONTWEIGHT_BOLD))
         self.panel = wx.Panel(self)

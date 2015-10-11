@@ -16,6 +16,7 @@ class AttributePanel(wx.Panel):
         self.root = root
         #self.SetBackgroundColour('#FFFF00')
 
+        # Elements
         self.title = wx.StaticText(self, label='Attribute')
         self.title.SetFont(wx.Font(11, wx.FONTFAMILY_DEFAULT, wx.NORMAL, wx.FONTWEIGHT_NORMAL))
         self.panel = wx.Panel(self)
