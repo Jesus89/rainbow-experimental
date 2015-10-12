@@ -37,7 +37,7 @@ class MainWindow(wx.Frame):
             style=wx.TR_DEFAULT_STYLE | wx.TR_HIDE_ROOT | wx.TR_FULL_ROW_HIGHLIGHT)
 
         self.control_panel = wx.lib.scrolledpanel.ScrolledPanel(self.panel)
-        self.control_panel.SetupScrolling(scroll_x=False, scrollIntoView=False)
+        self.control_panel.SetupScrolling(scrollIntoView=False)
 
         self.class_panel = ClassPanel(self.control_panel, root)
         self.method_panel = MethodPanel(self.control_panel, root)

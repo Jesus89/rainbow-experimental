@@ -16,8 +16,8 @@ class MyClass(object):
         self._c = True
         self.d = D()
 
-    def add(self, a, b):
-        return a + b
+    def add(self, p, q=1, r=-1):
+        return p + q + r
 
     def log(self):
         return "log:", self.a, self.b

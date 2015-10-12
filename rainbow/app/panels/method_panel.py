@@ -14,7 +14,7 @@ from rainbow.app.panels.attribute_panel import AttributePanel
 
 class ParameterPanel(wx.Panel):
 
-    def __init__(self, parent, name):
+    def __init__(self, parent, name, value=''):
         wx.Panel.__init__(self, parent)
 
         # self.SetBackgroundColour(wx.RED)
@@ -22,7 +22,7 @@ class ParameterPanel(wx.Panel):
         # Elements
         self.name = wx.StaticText(self, label=name)
         self.name.SetFont(wx.Font(11, wx.FONTFAMILY_DEFAULT, wx.NORMAL, wx.FONTWEIGHT_NORMAL))
-        self.value = wx.TextCtrl(self)
+        self.value = wx.TextCtrl(self, value=str(value))
 
         # Layout
         hsizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -37,6 +37,9 @@ class ParameterPanel(wx.Panel):
 
     def get_value(self):
         return self.value.GetValue()
+
+    def set_value(self, value):
+        return self.value.SetValue(str(value))
 
 
 class MethodPanel(wx.Panel):
@@ -74,20 +77,27 @@ class MethodPanel(wx.Panel):
     def set_item(self, instance):
         self.instance = 'self.root.' + instance
         self.title.SetLabel('Method:  ' + instance)
+        # + '  <' + str(type(eval(self.instance)))[7:-2] + '>')
 
         self.sizer.DeleteWindows()
         self.sizer.Clear()
         self.parameters = []
 
         args = inspect.getargspec(eval(self.instance)).args[1:]
-        # print inspect.getargspec(eval(self.instance)).defaults
+        defaults = inspect.getargspec(eval(self.instance)).defaults
 
         for arg in args:
             parameter = ParameterPanel(self.parameters_panel, arg)
             self.parameters += [parameter]
             self.sizer.Add(parameter, 0, wx.ALL | wx.EXPAND, 5)
 
-        # + '  <' + str(type(eval(self.instance)))[7:-2] + '>')
+        if defaults is not None:
+            n = len(defaults)
+            for parameter in list(reversed(self.parameters)):
+                if n > 0:
+                    n -= 1
+                    parameter.set_value(defaults[n])
+
         self.button_method.SetLabel(instance.split('.')[-1])
         self.result.SetLabel('Output: ')
 
