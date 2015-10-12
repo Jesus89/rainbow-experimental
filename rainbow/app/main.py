@@ -22,7 +22,7 @@ __version__ = "0.0.2"
 class MainWindow(wx.Frame):
 
     def __init__(self):
-        super(MainWindow, self).__init__(None, size=(800, 650), title="Rainbow " + __version__)
+        super(MainWindow, self).__init__(None, size=(800, 600), title="Rainbow " + __version__)
 
         # Elements
         self.toolbar = wx.ToolBar(self)

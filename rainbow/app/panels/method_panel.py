@@ -44,11 +44,12 @@ class ParameterPanel(wx.Panel):
 
 class MethodPanel(wx.Panel):
 
-    def __init__(self, parent, root):
+    def __init__(self, parent, root, show_path=True):
         wx.Panel.__init__(self, parent)
 
         self.root = root
         self.parameters = []
+        self.show_path = show_path
         # self.SetBackgroundColour(wx.RED)
 
         # Elements
@@ -76,8 +77,6 @@ class MethodPanel(wx.Panel):
 
     def set_item(self, instance):
         self.instance = 'self.root.' + instance
-        self.title.SetLabel('Method:  ' + instance)
-        # + '  <' + str(type(eval(self.instance)))[7:-2] + '>')
 
         self.sizer.DeleteWindows()
         self.sizer.Clear()
@@ -99,6 +98,12 @@ class MethodPanel(wx.Panel):
                     parameter.set_value(defaults[n])
 
         self.button_method.SetLabel(instance.split('.')[-1])
+
+        if not self.show_path:
+            instance = instance.split('.')[-1]
+        self.title.SetLabel('Method:  ' + instance)
+        # + '  <' + str(type(eval(self.instance)))[7:-2] + '>')
+
         self.result.SetLabel('Output: ')
 
     def on_method_button_pressed(self, event):

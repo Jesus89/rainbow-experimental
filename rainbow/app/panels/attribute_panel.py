@@ -10,10 +10,11 @@ import wx._core
 
 class AttributePanel(wx.Panel):
 
-    def __init__(self, parent, root):
+    def __init__(self, parent, root, show_path=True):
         wx.Panel.__init__(self, parent)
 
         self.root = root
+        self.show_path = show_path
         #self.SetBackgroundColour('#FFFF00')
 
         # Elements
@@ -44,6 +45,8 @@ class AttributePanel(wx.Panel):
 
     def set_item(self, instance):
         self.instance = 'self.root.' + instance
+        if not self.show_path:
+            instance = instance.split('.')[-1]
         self.title.SetLabel(
             'Attribute:  ' + instance)  # + '  <' + str(type(eval(self.instance)))[7:-2] + '>')
         self.on_get_button_pressed(None)

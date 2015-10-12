@@ -14,10 +14,11 @@ from rainbow.app.panels.attribute_panel import AttributePanel
 
 class ClassPanel(wx.Panel):
 
-    def __init__(self, parent, root):
+    def __init__(self, parent, root, show_path=True):
         wx.Panel.__init__(self, parent)
 
         self.root = root
+        self.show_path = show_path
         #self.SetBackgroundColour(wx.BLUE)
 
         # Elements
@@ -38,8 +39,6 @@ class ClassPanel(wx.Panel):
 
     def set_item(self, instance):
         self.instance = 'self.root.' + instance
-        self.title.SetLabel(
-            'Class:  ' + instance)  # + '  <' + str(type(eval(self.instance)))[8:-2] + '>')
 
         self.sizer.DeleteWindows()
         self.sizer.Clear()
@@ -47,6 +46,11 @@ class ClassPanel(wx.Panel):
         self.fill_elements(instance, dictionary)
         exec('dictionary = ' + self.instance + '.__class__.__dict__')
         self.fill_elements(instance, dictionary)
+
+        if not self.show_path:
+            instance = instance.split('.')[-1]
+        self.title.SetLabel(
+            'Class:  ' + instance)  # + '  <' + str(type(eval(self.instance)))[8:-2] + '>')
 
     def fill_elements(self, instance, dictionary):
         for k, v in dictionary.iteritems():
@@ -56,17 +60,17 @@ class ClassPanel(wx.Panel):
                 if 'class' in str(_type) or _type is types.InstanceType:
                     _class = wx.StaticText(self.panel)
                     _class.SetLabel(
-                        'Class:  ' + inst)
+                        'Class:  ' + k)
                         # + '  <' + str(type(eval('self.root.' + instance)))[8:-2] + '>')
                     _class.SetFont(
                         wx.Font(11, wx.FONTFAMILY_DEFAULT, wx.NORMAL, wx.FONTWEIGHT_NORMAL))
                     self.sizer.Add(_class, 0, wx.ALL | wx.EXPAND, 15)
                 elif _type is types.MethodType or _type is types.FunctionType:
-                    method = MethodPanel(self.panel, self.root)
+                    method = MethodPanel(self.panel, self.root, show_path=False)
                     method.set_item(inst)
                     self.sizer.Add(method, 0, wx.ALL | wx.EXPAND, 5)
                 elif _type in [str, int, float, bool]:
-                    attribute = AttributePanel(self.panel, self.root)
+                    attribute = AttributePanel(self.panel, self.root, show_path=False)
                     attribute.set_item(inst)
                     self.sizer.Add(attribute, 0, wx.ALL | wx.EXPAND, 5)
 

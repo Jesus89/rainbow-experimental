@@ -11,13 +11,12 @@ class D(object):
 class MyClass(object):
 
     def __init__(self):
-        self.a = 1
-        self.b = 2
-        self._c = True
-        self.d = D()
-
-    def add(self, p, q=1, r=-1):
-        return p + q + r
+        self.a = 0
+        self._b = True
+        self.c = D()
 
     def log(self):
-        return "log:", self.a, self.b
+        return "log:", self.a
+
+    def add(self, p=1, q=2, r=3):
+        return p + q + r
