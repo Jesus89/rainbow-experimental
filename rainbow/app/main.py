@@ -102,7 +102,7 @@ class MainWindow(wx.Frame):
                 elif _type is types.MethodType or _type is types.FunctionType:
                     leave = self.tree_view.AppendItem(node, key)
                     self.tree_view.SetItemImage(leave, self.method_image, wx.TreeItemIcon_Normal)
-                elif _type in [str, int, float, bool]:
+                elif _type in [str, unicode, int, float, bool] or 'property' in str(_type):
                     leave = self.tree_view.AppendItem(node, key)
                     self.tree_view.SetItemImage(
                         leave, self.attribute_image, wx.TreeItemIcon_Normal)
@@ -122,7 +122,7 @@ class MainWindow(wx.Frame):
         elif _type is types.MethodType or _type is types.FunctionType:
             self.method_panel.set_item(instance)
             self.method_panel.Show()
-        elif _type in [str, int, float, bool]:
+        elif _type in [str, unicode, int, float, bool]:
             self.attribute_panel.set_item(instance)
             self.attribute_panel.Show()
 

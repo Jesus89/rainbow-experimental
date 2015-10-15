@@ -69,7 +69,7 @@ class ClassPanel(wx.Panel):
                     method = MethodPanel(self.panel, self.root, show_path=False)
                     method.set_item(inst)
                     self.sizer.Add(method, 0, wx.ALL | wx.EXPAND, 5)
-                elif _type in [str, int, float, bool]:
+                elif _type in [str, unicode, int, float, bool] or 'property' in str(_type):
                     attribute = AttributePanel(self.panel, self.root, show_path=False)
                     attribute.set_item(inst)
                     self.sizer.Add(attribute, 0, wx.ALL | wx.EXPAND, 5)

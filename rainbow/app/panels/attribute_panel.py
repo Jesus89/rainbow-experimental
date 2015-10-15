@@ -34,7 +34,7 @@ class AttributePanel(wx.Panel):
 
         vsizer = wx.BoxSizer(wx.VERTICAL)
         vsizer.Add(self.title, 0, wx.ALL | wx.EXPAND, 5)
-        vsizer.Add(self.panel, 1, wx.TOP, 10)
+        vsizer.Add(self.panel, 1, wx.TOP | wx.EXPAND, 10)
         self.SetSizer(vsizer)
 
         self.Layout()
@@ -64,7 +64,7 @@ class AttributePanel(wx.Panel):
             exec(self.instance + '= self.to_float(value)')
         elif _type is bool:
             exec(self.instance + '= self.to_bool(value)')
-        elif _type is str:
+        elif _type is str or _type is unicode:
             exec(self.instance + '= value')
 
         self.on_get_button_pressed(None)
