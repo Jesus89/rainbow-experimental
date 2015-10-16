@@ -15,7 +15,7 @@ class AttributePanel(wx.Panel):
 
         self.root = root
         self.show_path = show_path
-        #self.SetBackgroundColour('#FFFF00')
+        # self.SetBackgroundColour('#FFFF00')
 
         # Elements
         self.title = wx.StaticText(self, label='Attribute')
@@ -54,7 +54,7 @@ class AttributePanel(wx.Panel):
     def on_get_button_pressed(self, event):
         self.text_box.SetValue(str(eval(self.instance)))
 
-    def on_set_button_pressed(self, event):
+    def execute_set(self):
         value = self.text_box.GetValue()
         _type = type(eval(self.instance))
 
@@ -66,6 +66,14 @@ class AttributePanel(wx.Panel):
             exec(self.instance + '= self.to_bool(value)')
         elif _type is str or _type is unicode:
             exec(self.instance + '= value')
+
+    def on_set_button_pressed(self, event):
+        try:
+            self.execute_set()
+        except Exception as e:
+            dlg = wx.MessageDialog(self, str(e), "Exception", wx.OK | wx.ICON_ERROR)
+            dlg.ShowModal()
+            dlg.Destroy()
 
         self.on_get_button_pressed(None)
 

@@ -9,8 +9,6 @@ import types
 import inspect
 import wx._core
 
-from rainbow.app.panels.attribute_panel import AttributePanel
-
 
 class ParameterPanel(wx.Panel):
 
@@ -106,7 +104,7 @@ class MethodPanel(wx.Panel):
 
         self.result.SetLabel('Output: ')
 
-    def on_method_button_pressed(self, event):
+    def execute_method(self):
         ret = ''
         _type = type(eval(self.instance))
         if _type is types.MethodType:
@@ -119,6 +117,16 @@ class MethodPanel(wx.Panel):
                 exec('ret = ' + self.instance + '(' + ','.join(values) + ')')
             else:
                 print "Error: Invalid parameters"
+        return ret
+
+    def on_method_button_pressed(self, event):
+        ret = ''
+        try:
+            ret = self.execute_method()
+        except Exception as e:
+            dlg = wx.MessageDialog(self, str(e), "Exception", wx.OK | wx.ICON_ERROR)
+            dlg.ShowModal()
+            dlg.Destroy()
         # elif _type is types.FunctionType:
         #    exec('ret = ' + self.instance + '(' + '.'.join(self.instance.split('.')[:-1]) + ')')
         self.result.SetLabel('Output:  ' + str(ret))

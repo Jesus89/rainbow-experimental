@@ -19,7 +19,7 @@ class ClassPanel(wx.Panel):
 
         self.root = root
         self.show_path = show_path
-        #self.SetBackgroundColour(wx.BLUE)
+        # self.SetBackgroundColour(wx.BLUE)
 
         # Elements
         self.title = wx.StaticText(self, label='Class')

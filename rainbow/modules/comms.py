@@ -14,7 +14,7 @@ class Comms(object):
 
     @port.setter
     def port(self, value):
-        print "setter of port called"
+        print "setter of port called:", value
         self._serial.port = value
         self._port = value
 
@@ -24,13 +24,17 @@ class Comms(object):
 
     @baudrate.setter
     def baudrate(self, value):
-        print "setter of baudrate called"
+        print "setter of baudrate called:", value
         self._serial.baudrate = value
         self._baudrate = value
 
     def open(self):
         self._serial.open()
         return self._serial.isOpen()
+
+    def read(self):
+        if self._serial.inWaiting():
+            return self._serial.read()
 
     def close(self):
         self._serial.close()
