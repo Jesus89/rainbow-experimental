@@ -7,6 +7,7 @@ __license__ = 'GNU General Public License v2 http://www.gnu.org/licenses/gpl2.ht
 
 import types
 import wx._core
+import collections
 
 from rainbow.app.panels.method_panel import MethodPanel
 from rainbow.app.panels.attribute_panel import AttributePanel
@@ -44,7 +45,7 @@ class ClassPanel(wx.Panel):
         self.sizer.Clear()
         exec('dictionary = ' + self.instance + '.__dict__')
         self.fill_elements(instance, dictionary)
-        exec('dictionary = ' + self.instance + '.__class__.__dict__')
+        exec('dictionary = self.sort_dictionary(' + self.instance + '.__class__.__dict__)')
         self.fill_elements(instance, dictionary)
 
         if not self.show_path:
@@ -75,3 +76,14 @@ class ClassPanel(wx.Panel):
                     self.sizer.Add(attribute, 0, wx.ALL | wx.EXPAND, 5)
 
                 self.sizer.Add(wx.StaticLine(self.panel), 0, wx.EXPAND | wx.ALL, 5)
+
+    def sort_dictionary(self, dictionary):
+        properties = collections.OrderedDict()
+        functions = collections.OrderedDict()
+        for item in dictionary.iteritems():
+            if 'property' in str(item[1]):
+                properties[item[0]] = item[1]
+            elif 'function' in str(item[1]):
+                functions[item[0]] = item[1]
+        properties.update(functions)
+        return properties

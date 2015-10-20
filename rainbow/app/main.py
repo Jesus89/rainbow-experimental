@@ -7,6 +7,7 @@ __license__ = 'GNU General Public License v2 http://www.gnu.org/licenses/gpl2.ht
 
 import types
 import wx._core
+import collections
 import wx.lib.scrolledpanel
 
 from rainbow.app.panels.class_panel import ClassPanel
@@ -96,7 +97,7 @@ class MainWindow(wx.Frame):
                         next_node, self.class_image, wx.TreeItemIcon_Normal)
                     try:
                         self.fill_node(next_node, instance.__dict__)
-                        self.fill_node(next_node, instance.__class__.__dict__)
+                        self.fill_node(next_node, self.sort_dictionary(instance.__class__.__dict__))
                     except TypeError:
                         pass
                 elif _type is types.MethodType or _type is types.FunctionType:
@@ -106,6 +107,17 @@ class MainWindow(wx.Frame):
                     leave = self.tree_view.AppendItem(node, key)
                     self.tree_view.SetItemImage(
                         leave, self.attribute_image, wx.TreeItemIcon_Normal)
+
+    def sort_dictionary(self, dictionary):
+        properties = collections.OrderedDict()
+        functions = collections.OrderedDict()
+        for item in dictionary.iteritems():
+            if 'property' in str(item[1]):
+                properties[item[0]] = item[1]
+            elif 'function' in str(item[1]):
+                functions[item[0]] = item[1]
+        properties.update(functions)
+        return properties
 
     def on_item_selected(self, event):
         path = self.get_item_path(event.GetItem())
