@@ -55,7 +55,7 @@ class MethodPanel(wx.Panel):
         self.title.SetFont(wx.Font(11, wx.FONTFAMILY_DEFAULT, wx.NORMAL, wx.FONTWEIGHT_NORMAL))
         self.parameters_panel = wx.Panel(self)
         self.button_method = wx.Button(self, label='method')
-        self.result = wx.StaticText(self, label='Output: ')
+        self.result = wx.TextCtrl(self, style=wx.TE_READONLY)  # wx.TE_MULTILINE
 
         # Layout
         self.sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -102,7 +102,7 @@ class MethodPanel(wx.Panel):
         self.title.SetLabel('Method:  ' + instance)
         # + '  <' + str(type(eval(self.instance)))[7:-2] + '>')
 
-        self.result.SetLabel('Output: ')
+        self.result.SetValue('')
 
     def execute_method(self):
         ret = ''
@@ -116,7 +116,7 @@ class MethodPanel(wx.Panel):
             if len(values) == len(self.parameters):
                 exec('ret = ' + self.instance + '(' + ','.join(values) + ')')
             else:
-                print "Error: Invalid parameters"
+                raise ValueError("Invalid parameters")
         return ret
 
     def on_method_button_pressed(self, event):
@@ -129,4 +129,4 @@ class MethodPanel(wx.Panel):
             dlg.Destroy()
         # elif _type is types.FunctionType:
         #    exec('ret = ' + self.instance + '(' + '.'.join(self.instance.split('.')[:-1]) + ')')
-        self.result.SetLabel('Output:  ' + str(ret))
+        self.result.SetValue(str(ret))

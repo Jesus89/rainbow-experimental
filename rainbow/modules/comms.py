@@ -32,10 +32,17 @@ class Comms(object):
         self._serial.open()
         return self._serial.isOpen()
 
+    def close(self):
+        self._serial.close()
+        return not self._serial.isOpen()
+
+    def write(self, char):
+        return self._serial.write(chr(char))
+
     def read(self):
         if self._serial.inWaiting():
             return self._serial.read()
 
-    def close(self):
-        self._serial.close()
-        return not self._serial.isOpen()
+    def read_line(self):
+        if self._serial.inWaiting():
+            return self._serial.readline()

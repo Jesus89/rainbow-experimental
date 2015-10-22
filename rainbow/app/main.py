@@ -17,7 +17,7 @@ from rainbow.app.panels.attribute_panel import AttributePanel
 from rainbow.modules import Root
 root = Root()
 
-__version__ = "0.0.2"
+__version__ = "0.0.3"
 
 
 class MainWindow(wx.Frame):
@@ -111,11 +111,11 @@ class MainWindow(wx.Frame):
     def sort_dictionary(self, dictionary):
         properties = collections.OrderedDict()
         functions = collections.OrderedDict()
-        for item in dictionary.iteritems():
-            if 'property' in str(item[1]):
-                properties[item[0]] = item[1]
-            elif 'function' in str(item[1]):
-                functions[item[0]] = item[1]
+        for key, value in dictionary.iteritems():
+            if 'property' in str(value):
+                properties[key] = value
+            elif 'function' in str(value):
+                functions[key] = value
         properties.update(functions)
         return properties
 
