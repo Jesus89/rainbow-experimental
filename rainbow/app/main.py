@@ -26,10 +26,11 @@ class MainWindow(wx.Frame):
         super(MainWindow, self).__init__(None, size=(800, 600), title="Rainbow " + __version__)
 
         # Elements
-        self.toolbar = wx.ToolBar(self)
-        self.refresh_tool = self.toolbar.AddLabelTool(
-            wx.ID_ANY, '', wx.Bitmap('rainbow/app/images/refresh.png'))
-        self.toolbar.Realize()
+        self.load_menu()
+        # self.toolbar = wx.ToolBar(self)
+        # self.refresh_tool = self.toolbar.AddLabelTool(
+        #     wx.ID_ANY, '', wx.Bitmap('rainbow/app/images/refresh.png'))
+        # self.toolbar.Realize()
 
         self.panel = wx.Panel(self)
 
@@ -70,7 +71,7 @@ class MainWindow(wx.Frame):
         self.panel.SetSizer(hsizer)
 
         vsizer = wx.BoxSizer(wx.VERTICAL)
-        vsizer.Add(self.toolbar, 0, wx.ALL | wx.EXPAND, 1)
+        # vsizer.Add(self.toolbar, 0, wx.ALL | wx.EXPAND, 1)
         vsizer.Add(self.panel, 1, wx.ALL | wx.EXPAND, 1)
         self.SetSizer(vsizer)
 
@@ -78,10 +79,53 @@ class MainWindow(wx.Frame):
 
         # Events
         self.tree_view.Bind(wx.EVT_TREE_SEL_CHANGED, self.on_item_selected)
-        self.Bind(wx.EVT_TOOL, self.on_refresh_tool, self.refresh_tool)
+        # self.Bind(wx.EVT_TOOL, self.on_refresh_tool, self.refresh_tool)
 
         # Initialize
         self.initialize()
+
+    def load_menu(self):
+        self.menu_bar = wx.MenuBar()
+        self.menu_file = wx.Menu()
+        self.menu_load_file = self.menu_file.Append(wx.NewId(), 'Load file')
+        self.menu_file.AppendSeparator()
+        self.menu_exit = self.menu_file.Append(wx.ID_EXIT, 'Exit')
+        self.menu_bar.Append(self.menu_file, 'File')
+        self.menu_edit = wx.Menu()
+        self.menu_refresh = self.menu_edit.Append(wx.NewId(), 'Refresh')
+        self.menu_bar.Append(self.menu_edit, 'Edit')
+        self.SetMenuBar(self.menu_bar)
+
+        self.Bind(wx.EVT_MENU, self.on_load_file, self.menu_load_file)
+        self.Bind(wx.EVT_MENU, self.on_refresh, self.menu_refresh)
+        self.Bind(wx.EVT_MENU, self.on_exit, self.menu_exit)
+
+    def on_load_file(self, event):
+        pass
+
+    def on_refresh(self, event):
+        root.reload()
+        self.tree_view.DeleteAllItems()
+        self.initialize()
+
+    def on_exit(self, event):
+        self.Close(True)
+
+    def on_refresh_tool(self, event):
+        root.reload()
+        self.tree_view.DeleteAllItems()
+        self.initialize()
+
+    def initialize(self):
+        # Generate TreeView
+        self.root_node = self.tree_view.AddRoot('Root')
+        self.fill_node(self.root_node, root.__dict__)
+        self.tree_view.ExpandAll()
+        # Hide all panels
+        self.class_panel.Hide()
+        self.method_panel.Hide()
+        self.attribute_panel.Hide()
+        self.Layout()
 
     def fill_node(self, node, dictionary):
         for key in dictionary.keys():
@@ -146,19 +190,3 @@ class MainWindow(wx.Frame):
             path = [self.tree_view.GetItemText(item)] + path
             item = self.tree_view.GetItemParent(item)
         return path
-
-    def on_refresh_tool(self, event):
-        root.reload()
-        self.tree_view.DeleteAllItems()
-        self.initialize()
-
-    def initialize(self):
-        # Generate TreeView
-        self.root_node = self.tree_view.AddRoot('Root')
-        self.fill_node(self.root_node, root.__dict__)
-        self.tree_view.ExpandAll()
-        # Hide all panels
-        self.class_panel.Hide()
-        self.method_panel.Hide()
-        self.attribute_panel.Hide()
-        self.Layout()
