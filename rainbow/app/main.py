@@ -101,7 +101,13 @@ class MainWindow(wx.Frame):
         self.Bind(wx.EVT_MENU, self.on_exit, self.menu_exit)
 
     def on_load_file(self, event):
-        pass
+        dlg = wx.FileDialog(self, 'Select rainbow file to load',
+                            style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
+        dlg.SetWildcard('Rainbow files (*.rw)|*.rw')
+        if dlg.ShowModal() == wx.ID_OK:
+            profile_file = dlg.GetPath()
+            print profile_file
+        dlg.Destroy()
 
     def on_refresh(self, event):
         root.reload()
