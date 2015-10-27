@@ -20,17 +20,10 @@
          "led": {
             "doc": "Turn on/off a led",
             "engine": "zum.led",
-            "args": {
-               "status": {
-                  "type": "String",
-                  "default": "on",
-                  "values": [
-                     "on",
-                     "off"
-                  ]
-               }
-            }
-         }
-      }
-   }
+            "args": [
+                "status"
+            ]
+        }
+     }
+  }
 }

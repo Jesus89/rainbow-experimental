@@ -10,14 +10,18 @@ import os
 import json
 from bottle import route
 from rainbow.app.response import Response
+from rainbow.app.inspect_object import build_config
+
+if True:
+    # Automatic config generation from code
+    config = build_config('rainbow.modules.zum', 'Zum')
+else:
+    with open(os.path.abspath('rainbow/app/config.json'), 'r') as content_file:
+        content = content_file.read()
+    config = json.loads(content)
 
 
-with open(os.path.abspath('rainbow/app/config.json'), 'r') as content_file:
-    content = content_file.read()
-
-config = json.loads(content)
 main = config['main']
-
 modules = main['modules']
 instances = main['instances']
 methods = main['methods']
@@ -31,11 +35,12 @@ for key, instance in instances.items():
     exec(key + '=' + instance)
 
 # Create methods
+# TODO: implement generic route function /<execute>/<parameters>
 for key, method in methods.items():
     args = method['args']
     if args is not None:
         # One parameter suposed
-        parameter = args.keys()[0]
+        parameter = args[0]
         function = """@route('/{0}/<{2}>')\ndef {0}({2}):\n\treturn function({1}, {2})
         """.format(key, method['engine'], parameter)
     else:

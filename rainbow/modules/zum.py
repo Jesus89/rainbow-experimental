@@ -16,14 +16,17 @@ class Zum(object):
         self._serial.baudrate = 9600
 
     def open(self):
+        """Open serial port"""
         self._serial.open()
         return self._serial.isOpen()
 
     def close(self):
+        """Close serial port"""
         self._serial.close()
         return not self._serial.isOpen()
 
     def led(self, value):
+        """Turn on/off a led"""
         msg = '\n'
         if len(value) > 0:
             if value[0] == 'on':
