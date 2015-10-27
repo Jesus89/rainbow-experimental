@@ -10,12 +10,10 @@ import wx._core
 import collections
 import wx.lib.scrolledpanel
 
+from rainbow.app.loader import load_rainbow
 from rainbow.app.panels.class_panel import ClassPanel
 from rainbow.app.panels.method_panel import MethodPanel
 from rainbow.app.panels.attribute_panel import AttributePanel
-
-from rainbow.modules import Root
-root = Root()
 
 __version__ = "0.0.3"
 
@@ -26,11 +24,8 @@ class MainWindow(wx.Frame):
         super(MainWindow, self).__init__(None, size=(800, 600), title="Rainbow " + __version__)
 
         # Elements
+        self.root = None
         self.load_menu()
-        # self.toolbar = wx.ToolBar(self)
-        # self.refresh_tool = self.toolbar.AddLabelTool(
-        #     wx.ID_ANY, '', wx.Bitmap('rainbow/app/images/refresh.png'))
-        # self.toolbar.Realize()
 
         self.panel = wx.Panel(self)
 
@@ -41,9 +36,9 @@ class MainWindow(wx.Frame):
         self.control_panel = wx.lib.scrolledpanel.ScrolledPanel(self.panel)
         self.control_panel.SetupScrolling(scrollIntoView=False)
 
-        self.class_panel = ClassPanel(self.control_panel, root)
-        self.method_panel = MethodPanel(self.control_panel, root)
-        self.attribute_panel = AttributePanel(self.control_panel, root)
+        self.class_panel = ClassPanel(self.control_panel)
+        self.method_panel = MethodPanel(self.control_panel)
+        self.attribute_panel = AttributePanel(self.control_panel)
 
         # Load tree images
         self.image_list = wx.ImageList(16, 16)
@@ -71,7 +66,6 @@ class MainWindow(wx.Frame):
         self.panel.SetSizer(hsizer)
 
         vsizer = wx.BoxSizer(wx.VERTICAL)
-        # vsizer.Add(self.toolbar, 0, wx.ALL | wx.EXPAND, 1)
         vsizer.Add(self.panel, 1, wx.ALL | wx.EXPAND, 1)
         self.SetSizer(vsizer)
 
@@ -79,10 +73,6 @@ class MainWindow(wx.Frame):
 
         # Events
         self.tree_view.Bind(wx.EVT_TREE_SEL_CHANGED, self.on_item_selected)
-        # self.Bind(wx.EVT_TOOL, self.on_refresh_tool, self.refresh_tool)
-
-        # Initialize
-        self.initialize()
 
     def load_menu(self):
         self.menu_bar = wx.MenuBar()
@@ -103,30 +93,30 @@ class MainWindow(wx.Frame):
     def on_load_file(self, event):
         dlg = wx.FileDialog(self, 'Select rainbow file to load',
                             style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
-        dlg.SetWildcard('Rainbow files (*.rw)|*.rw')
+        dlg.SetWildcard('Rainbow files (rainbow.py)|rainbow.py')
         if dlg.ShowModal() == wx.ID_OK:
-            profile_file = dlg.GetPath()
-            print profile_file
+            self.file_path = dlg.GetPath()
+            self.initialize()
         dlg.Destroy()
 
     def on_refresh(self, event):
-        root.reload()
-        self.tree_view.DeleteAllItems()
+        # TODO
         self.initialize()
 
     def on_exit(self, event):
         self.Close(True)
 
-    def on_refresh_tool(self, event):
-        root.reload()
-        self.tree_view.DeleteAllItems()
-        self.initialize()
-
     def initialize(self):
+        self.root = load_rainbow(self.file_path)
+        self.tree_view.DeleteAllItems()
         # Generate TreeView
         self.root_node = self.tree_view.AddRoot('Root')
-        self.fill_node(self.root_node, root.__dict__)
+        self.fill_node(self.root_node, self.root.__dict__)
         self.tree_view.ExpandAll()
+        # Load instances in panels
+        self.class_panel.load_root(self.root)
+        self.method_panel.load_root(self.root)
+        self.attribute_panel.load_root(self.root)
         # Hide all panels
         self.class_panel.Hide()
         self.method_panel.Hide()
@@ -172,7 +162,7 @@ class MainWindow(wx.Frame):
     def on_item_selected(self, event):
         path = self.get_item_path(event.GetItem())
         instance = '.'.join(path)
-        _type = type(eval('root.' + instance))
+        _type = type(eval('self.root.' + instance))
 
         self.class_panel.Hide()
         self.method_panel.Hide()

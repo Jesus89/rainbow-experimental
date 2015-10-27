@@ -15,12 +15,11 @@ from rainbow.app.panels.attribute_panel import AttributePanel
 
 class ClassPanel(wx.Panel):
 
-    def __init__(self, parent, root, show_path=True):
+    def __init__(self, parent, show_path=True):
         wx.Panel.__init__(self, parent)
 
-        self.root = root
+        self.root = None
         self.show_path = show_path
-        # self.SetBackgroundColour(wx.BLUE)
 
         # Elements
         self.title = wx.StaticText(self, label='Class')
@@ -35,8 +34,11 @@ class ClassPanel(wx.Panel):
         vsizer.Add(self.title, 0, wx.ALL | wx.EXPAND, 5)
         vsizer.Add(self.panel, 1, wx.ALL | wx.EXPAND, 10)
         self.SetSizer(vsizer)
-
+        self.Hide()
         self.Layout()
+
+    def load_root(self, root):
+        self.root = root
 
     def set_item(self, instance):
         self.instance = 'self.root.' + instance
@@ -67,12 +69,16 @@ class ClassPanel(wx.Panel):
                         wx.Font(11, wx.FONTFAMILY_DEFAULT, wx.NORMAL, wx.FONTWEIGHT_NORMAL))
                     self.sizer.Add(_class, 0, wx.ALL | wx.EXPAND, 15)
                 elif _type is types.MethodType or _type is types.FunctionType:
-                    method = MethodPanel(self.panel, self.root, show_path=False)
+                    method = MethodPanel(self.panel, show_path=False)
+                    method.load_root(self.root)
                     method.set_item(inst)
+                    method.Show()
                     self.sizer.Add(method, 0, wx.ALL | wx.EXPAND, 5)
                 elif _type in [str, unicode, int, float, bool] or 'property' in str(_type):
-                    attribute = AttributePanel(self.panel, self.root, show_path=False)
+                    attribute = AttributePanel(self.panel, show_path=False)
+                    attribute.load_root(self.root)
                     attribute.set_item(inst)
+                    attribute.Show()
                     self.sizer.Add(attribute, 0, wx.ALL | wx.EXPAND, 5)
 
                 self.sizer.Add(wx.StaticLine(self.panel), 0, wx.EXPAND | wx.ALL, 5)

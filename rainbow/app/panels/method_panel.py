@@ -15,8 +15,6 @@ class ParameterPanel(wx.Panel):
     def __init__(self, parent, name, value=''):
         wx.Panel.__init__(self, parent)
 
-        # self.SetBackgroundColour(wx.RED)
-
         # Elements
         self.name = wx.StaticText(self, label=name)
         self.name.SetFont(wx.Font(11, wx.FONTFAMILY_DEFAULT, wx.NORMAL, wx.FONTWEIGHT_NORMAL))
@@ -27,7 +25,6 @@ class ParameterPanel(wx.Panel):
         hsizer.Add(self.name, 0, wx.TOP | wx.EXPAND, 13)
         hsizer.Add(self.value, 1, wx.ALL | wx.EXPAND, 5)
         self.SetSizer(hsizer)
-
         self.Layout()
 
     def get_name(self):
@@ -42,10 +39,10 @@ class ParameterPanel(wx.Panel):
 
 class MethodPanel(wx.Panel):
 
-    def __init__(self, parent, root, show_path=True):
+    def __init__(self, parent, show_path=True):
         wx.Panel.__init__(self, parent)
 
-        self.root = root
+        self.root = None
         self.parameters = []
         self.show_path = show_path
         # self.SetBackgroundColour(wx.RED)
@@ -67,11 +64,14 @@ class MethodPanel(wx.Panel):
         vsizer.Add(self.button_method, 0, wx.ALL, 5)
         vsizer.Add(self.result, 1, wx.ALL | wx.EXPAND, 5)
         self.SetSizer(vsizer)
-
+        self.Hide()
         self.Layout()
 
         # Events
         self.button_method.Bind(wx.EVT_BUTTON, self.on_method_button_pressed)
+
+    def load_root(self, root):
+        self.root = root
 
     def set_item(self, instance):
         self.instance = 'self.root.' + instance

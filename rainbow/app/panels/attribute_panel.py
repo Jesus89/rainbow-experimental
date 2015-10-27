@@ -10,12 +10,11 @@ import wx._core
 
 class AttributePanel(wx.Panel):
 
-    def __init__(self, parent, root, show_path=True):
+    def __init__(self, parent, show_path=True):
         wx.Panel.__init__(self, parent)
 
-        self.root = root
+        self.root = None
         self.show_path = show_path
-        # self.SetBackgroundColour('#FFFF00')
 
         # Elements
         self.title = wx.StaticText(self, label='Attribute')
@@ -36,12 +35,15 @@ class AttributePanel(wx.Panel):
         vsizer.Add(self.title, 0, wx.ALL | wx.EXPAND, 5)
         vsizer.Add(self.panel, 1, wx.TOP | wx.EXPAND, 10)
         self.SetSizer(vsizer)
-
+        self.Hide()
         self.Layout()
 
         # Events
         self.button_get.Bind(wx.EVT_BUTTON, self.on_get_button_pressed)
         self.button_set.Bind(wx.EVT_BUTTON, self.on_set_button_pressed)
+
+    def load_root(self, root):
+        self.root = root
 
     def set_item(self, instance):
         self.instance = 'self.root.' + instance
