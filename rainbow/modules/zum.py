@@ -29,14 +29,3 @@ class Zum(object):
             if value[0] == 'on':
                 msg = 'on\n'
         self._serial.write(msg.encode())
-
-    def _write(self, char):
-        return self._serial.write(chr(char))
-
-    def _read(self):
-        if self._serial.inWaiting():
-            return self._serial.read()
-
-    def _read_line(self):
-        if self._serial.inWaiting():
-            return self._serial.readline()
