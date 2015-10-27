@@ -1,4 +1,4 @@
-Rainbow server
+# Rainbow server
 
 ## Installation
 

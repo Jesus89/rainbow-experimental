@@ -6,7 +6,7 @@ except ImportError as e:
     print e.message
     exit(1)
 
-from rainbow_server.app import server
+from rainbow.app import server
 
 
 def main():
