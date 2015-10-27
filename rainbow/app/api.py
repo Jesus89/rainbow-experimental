@@ -8,45 +8,50 @@ __license__ = 'GNU General Public License v2 http://www.gnu.org/licenses/gpl2.ht
 
 import os
 import json
-from bottle import route
 from rainbow.app.response import Response
 from rainbow.app.inspect_object import build_config
 
-if True:
-    # Automatic config generation from code
-    config = build_config('rainbow.modules.zum', 'Zum')
-else:
-    with open(os.path.abspath('rainbow/app/config.json'), 'r') as content_file:
-        content = content_file.read()
-    config = json.loads(content)
+MODULES = {}
 
 
-main = config['main']
-modules = main['modules']
-instances = main['instances']
-methods = main['methods']
-
-# Import modules
-for module in modules:
-    exec('import ' + module)
-
-# Load instances
-for key, instance in instances.items():
-    exec(key + '=' + instance)
-
-# Create methods
-# TODO: implement generic route function /<execute>/<parameters>
-for key, method in methods.items():
-    args = method['args']
-    if args is not None:
-        # One parameter suposed
-        parameter = args[0]
-        function = """@route('/{0}/<{2}>')\ndef {0}({2}):\n\treturn function({1}, {2})
-        """.format(key, method['engine'], parameter)
+def build_api(app):
+    if False:
+        # Automatic config generation from code
+        config = build_config('rainbow.modules.zum', 'Zum')
     else:
-        function = """@route('/{0}')\ndef {0}():\n\treturn function({1})
-        """.format(key, method['engine'])
-    exec(function)
+        with open(os.path.abspath('rainbow/app/config.json'), 'r') as content_file:
+            content = content_file.read()
+        config = json.loads(content)
+
+    modules = config['modules']
+    for module in modules:
+        module = modules[0]
+
+        # Import modules
+        exec('from ' + module['import'] + ' import ' + module['class'])
+
+        # Load instance
+        exec(module['name'] + '=' + module['class'] + '()')
+        exec('MODULES["' + module['name'] + '"] = ' + module['name'])
+
+        print MODULES['zum'].open()
+
+        # Create methods
+        methods = module['methods']
+        # TODO: implement generic route function /<execute>/<parameters>
+        for key, method in methods.items():
+            args = method['args']
+            if args is not None:
+                # One parameter supported
+                parameter = args[0]
+                function = """@app.route('/{0}/{1}/<{3}>')\ndef {1}({3}):\n\treturn function(MODULES["{0}"].{2}, {3})
+                """.format(module['name'], key, method['engine'], parameter)
+            else:
+                function = """@app.route('/{0}/{1}')\ndef {1}():\n\treturn function(MODULES["{0}"].{2})
+                """.format(module['name'], key, method['engine'])
+            exec(function)
+
+        return config
 
 
 def function(f, *args):

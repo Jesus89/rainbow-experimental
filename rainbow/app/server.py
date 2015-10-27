@@ -6,11 +6,14 @@ __copyright__ = 'Copyright (C) 2015 Mundo Reader S.L.'
 __license__ = 'GNU General Public License v2 http://www.gnu.org/licenses/gpl2.html'
 
 
-from bottle import hook, response, route, run
+from bottle import Bottle, request, response, run
 from rainbow.app import api
 
+app = Bottle()
+config = api.build_api(app)
 
-@hook('after_request')
+
+@app.hook('after_request')
 def enable_cors():
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.headers['Access-Control-Allow-Credentials'] = 'true'
@@ -18,8 +21,8 @@ def enable_cors():
     response.headers['Access-Control-Allow-Headers'] = 'X-Requested-With, Content-Type'
 
 
-@route('/')
+@app.route('/')
 def home():
-    return ""
+    return config
 
-run(host='localhost', port=8080, debug=True)
+run(app, host='localhost', port=8081, debug=True)
