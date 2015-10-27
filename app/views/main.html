@@ -1,23 +1,21 @@
 <div class="jumbotron">
-  <h1>'Allo, 'Allo!</h1>
-  <p class="lead">
-    <img src="images/yeoman.png" alt="I'm Yeoman"><br>
-    Always a pleasure scaffolding your apps.
-  </p>
-  <p><a class="btn btn-lg btn-success" ng-href="#/">Splendid!<span class="glyphicon glyphicon-ok"></span></a></p>
+    <select data-ng-model="requestParams.method">
+        <option>GET</option>
+        <option>POST</option>
+        <option>PUT</option>
+        <option>DELETE</option>
+        <option>HEAD</option>
+    </select>
+    <input type="text" data-ng-model="requestParams.url" />
+    <button data-ng-click="doRequest()">Do it!</button>
 </div>
-
-<div class="row marketing">
-  <h4>HTML5 Boilerplate</h4>
-  <p>
-    HTML5 Boilerplate is a professional front-end template for building fast, robust, and adaptable web apps or sites.
-  </p>
-
-  <h4>Angular</h4>
-  <p>
-    AngularJS is a toolset for building the framework most suited to your application development.
-  </p>
-
-  <h4>Karma</h4>
-  <p>Spectacular Test Runner for JavaScript.</p>
+<div class="responses">
+    <div class="response-container">
+        <label class="success">Success</label>
+        <textarea rows="10" cols="50" data-ng-model="successResponse"></textarea>
+    </div>
+    <div class="response-container">
+        <label class="error">Error</label>
+        <textarea rows="10" cols="50" data-ng-model="errorResponse"></textarea>
+    </div>
 </div>
