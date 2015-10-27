@@ -1,5 +1,5 @@
-import modules.example
-import modules.comms
+import example
+import comms
 
-__instances__ = {'myclass': modules.example.MyClass(),
-                 'comms': modules.comms.Comms()}
+__instances__ = {'myclass': example.MyClass(),
+                 'comms': comms.Comms()}
