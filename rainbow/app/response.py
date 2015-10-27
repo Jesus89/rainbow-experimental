@@ -15,9 +15,9 @@ class Response(object):
 
     def __str__(self):
         resp = '{'
-        resp += 'status:' + self.to_string(self.status) + ','
-        resp += 'data:' + self.to_string(self.data) + ','
-        resp += 'message:' + self.to_string(self.message)
+        resp += '"status":' + self.to_string(self.status) + ','
+        resp += '"data":' + self.to_string(self.data) + ','
+        resp += '"message":' + self.to_string(self.message)
         resp += '}'
         return resp
 
