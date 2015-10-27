@@ -15,7 +15,7 @@ MODULES = {}
 
 
 def build_api(app):
-    if False:
+    if True:
         # Automatic config generation from code
         config = build_config('rainbow.modules.zum', 'Zum')
     else:
@@ -33,8 +33,6 @@ def build_api(app):
         # Load instance
         exec(module['name'] + '=' + module['class'] + '()')
         exec('MODULES["' + module['name'] + '"] = ' + module['name'])
-
-        print MODULES['zum'].open()
 
         # Create methods
         methods = module['methods']
