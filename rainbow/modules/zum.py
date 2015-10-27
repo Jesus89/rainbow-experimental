@@ -13,7 +13,7 @@ class Zum(object):
     def __init__(self):
         self._serial = serial.Serial()
         self._serial.port = '/dev/ttyUSB0'
-        self._serial.baudrate = 115200
+        self._serial.baudrate = 9600
 
     def open(self):
         self._serial.open()
@@ -23,13 +23,20 @@ class Zum(object):
         self._serial.close()
         return not self._serial.isOpen()
 
-    def write(self, char):
+    def led(self, value):
+        msg = '\n'
+        if len(value) > 0:
+            if value[0] == 'on':
+                msg = 'on\n'
+        self._serial.write(msg.encode())
+
+    def _write(self, char):
         return self._serial.write(chr(char))
 
-    def read(self):
+    def _read(self):
         if self._serial.inWaiting():
             return self._serial.read()
 
-    def read_line(self):
+    def _read_line(self):
         if self._serial.inWaiting():
             return self._serial.readline()

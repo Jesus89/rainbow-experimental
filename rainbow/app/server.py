@@ -28,19 +28,9 @@ def close():
     return function(zum.close)
 
 
-@route('/read_line')
-def read_line():
-    return function(zum.read_line)
-
-
-@route('/read')
-def read():
-    return function(zum.read)
-
-
-@route('/write/<char>')
-def write(char):
-    return function(zum.write, char)
+@route('/led/<status>')  # <"on", !"on">
+def led(status):
+    return function(zum.led, status)
 
 
 def function(f, *args):
