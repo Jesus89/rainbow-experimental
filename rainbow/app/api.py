@@ -14,6 +14,7 @@ from rainbow.app.inspect_object import build_config
 MODULES = {}
 
 
+# TODO: refactor!
 def build_api(app):
     if True:
         # Automatic config generation from code
@@ -40,12 +41,10 @@ def build_api(app):
         for key, method in methods.items():
             args = method['args']
             if args is not None:
-                # One parameter supported
-                parameter = args[0]
-                function = """@app.route('/{0}/{1}/<{3}>')\ndef {1}({3}):\n\treturn function(MODULES["{0}"].{2}, {3})
-                """.format(module['name'], key, method['engine'], parameter)
+                function = """@app.get('/{0}/{1}/<{3}>')\ndef {1}({4}):\n\treturn function(MODULES["{0}"].{2}, {4})
+                """.format(module['name'], key, method['engine'], '>,<'.join(args), ', '.join(args))
             else:
-                function = """@app.route('/{0}/{1}')\ndef {1}():\n\treturn function(MODULES["{0}"].{2})
+                function = """@app.get('/{0}/{1}')\ndef {1}():\n\treturn function(MODULES["{0}"].{2})
                 """.format(module['name'], key, method['engine'])
             exec(function)
 
@@ -56,7 +55,7 @@ def function(f, *args):
     response = Response()
     try:
         if len(args) > 0:
-            response.data = str(f(args))
+            response.data = str(f(*args))
         else:
             response.data = str(f())
     except Exception as e:
