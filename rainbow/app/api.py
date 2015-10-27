@@ -6,34 +6,42 @@ __copyright__ = 'Copyright (C) 2015 Mundo Reader S.L.'
 __license__ = 'GNU General Public License v2 http://www.gnu.org/licenses/gpl2.html'
 
 
+import os
+import json
 from bottle import route
 from rainbow.app.response import Response
 
 
-def build_api():
-    # >>>> Generate code <<<<
+with open(os.path.abspath('rainbow/app/config.json'), 'r') as content_file:
+    content = content_file.read()
 
-    # modules
-    import rainbow.modules.zum
+config = json.loads(content)
+main = config['main']
 
-    # instances
-    zum = rainbow.modules.zum.Zum()
+modules = main['modules']
+instances = main['instances']
+methods = main['methods']
 
-    # methods
+# Import modules
+for module in modules:
+    exec('import ' + module)
 
-    @route('/open')
-    def open():
-        return function(zum.open)
+# Load instances
+for key, instance in instances.items():
+    exec(key + '=' + instance)
 
-    @route('/close')
-    def close():
-        return function(zum.close)
-
-    @route('/led/<status>')  # <"on", !"on">
-    def led(status):
-        return function(zum.led, status)
-
-    # <<<< >>>>
+# Create methods
+for key, method in methods.items():
+    args = method['args']
+    if args is not None:
+        # One parameter suposed
+        parameter = args.keys()[0]
+        function = """@route('/{0}/<{2}>')\ndef {0}({2}):\n\treturn function({1}, {2})
+        """.format(key, method['engine'], parameter)
+    else:
+        function = """@route('/{0}')\ndef {0}():\n\treturn function({1})
+        """.format(key, method['engine'])
+    exec(function)
 
 
 def function(f, *args):

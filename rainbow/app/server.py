@@ -9,8 +9,6 @@ __license__ = 'GNU General Public License v2 http://www.gnu.org/licenses/gpl2.ht
 from bottle import route, run
 from rainbow.app import api
 
-api.build_api()
-
 
 @route('/')
 def home():

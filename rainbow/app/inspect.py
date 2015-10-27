@@ -4,31 +4,21 @@
          "rainbow.modules.zum"
       ],
       "instances": {
-            "zum": "rainbow.modules.zum.Zum()"
+            "zum": "rainbow.modules.zum.Zum()",
       },
       "methods": {
          "open": {
-            "doc": "Open serial port",
             "engine": "zum.open",
             "args": null
          },
          "close": {
-            "doc": "Close serial port",
             "engine": "zum.close",
             "args": null
          },
          "led": {
-            "doc": "Turn on/off a led",
             "engine": "zum.led",
             "args": {
-               "status": {
-                  "type": "String",
-                  "default": "on",
-                  "values": [
-                     "on",
-                     "off"
-                  ]
-               }
+               "status": { }
             }
          }
       }
