@@ -1,15 +1,16 @@
 <div class="jumbotron">
-    <select data-ng-model="requestParams.method">
+    <!--<select data-ng-model="requestParams.method">
         <option>GET</option>
         <option>POST</option>
         <option>PUT</option>
         <option>DELETE</option>
         <option>HEAD</option>
-    </select>
+    </select>-->
     <input type="text" data-ng-model="requestParams.url" />
-    <button data-ng-click="doRequest()">Do it!</button>
+    <button data-ng-click="doRequest()">Load modules</button>
+    <button data-ng-click="doClear()">Clear</button>
 </div>
-<div class="responses">
+<!--<div class="responses">
     <div class="response-container">
         <label class="success">Success</label>
         <textarea rows="10" cols="50" data-ng-model="successResponseText"></textarea>
@@ -18,29 +19,27 @@
         <label class="error">Error</label>
         <textarea rows="10" cols="50" data-ng-model="errorResponseText"></textarea>
     </div>
-</div>
-<div class="form">
-    <h2>Methods</h2>
-    <div class="method" data-ng-repeat="(key, value) in successResponse.data.modules[0].methods">
+</div>-->
+<div class="form" data-ng-repeat="(name, module) in successResponse.data.modules">
+    <h1>{{name}}</h1>
+    <div class="method" data-ng-repeat="(key, value) in module.methods">
         <h3>{{key}}</h3>
-        <h4>Engine: {{value.engine}}</h4>
-        <h5>Doc: {{value.doc}}</h5>
-        <h6>Args: {{value.args}}</h6>
+        <h5>{{value.doc}}</h5>
         <div class="args" data-ng-repeat="arg in value.args">
             <label>{{arg}}</label>
-            <input type="text" data-ng-model="parameters[key][arg]"></input>
+            <input type="text" size=10 data-ng-model="parameters[key][arg]"></input>
         </div>
-        <select data-ng-model="requestParams.method">
+        <!--<select data-ng-model="requestParams.method">
             <option>GET</option>
             <option>POST</option>
             <option>PUT</option>
             <option>DELETE</option>
             <option>HEAD</option>
-        </select>
-        <button data-ng-click="doMethodRequest(key)">Ejecutar un {{requestParams.method}} en {{requestParams.url}}/{{value.engine}} </button>
+        </select>-->
+        <button data-ng-click="doMethodRequest(name, key)">Execute</button>
     </div>
 </div>
-<div class="responses">
+<!--<div class="responses">
     <h2>Methods Results</h2>
     <div class="response-container">
         <label class="success">Success</label>
@@ -50,4 +49,4 @@
         <label class="error">Error</label>
         <textarea rows="10" cols="50" data-ng-model="methodErrorResponseText"></textarea>
     </div>
-</div>
+</div>-->

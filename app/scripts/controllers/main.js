@@ -35,14 +35,18 @@ angular.module('rainbowClientApp')
             });
         }
 
+        $scope.doClear = function() {
+            $scope.successResponse = null
+        }
+
         $scope.stringify = function(object) {
             return JSON.stringify(object);
         }
 
-        $scope.doMethodRequest = function(key) {
+        $scope.doMethodRequest = function(name, key) {
             var requestParams = {
                 method: $scope.requestParams.method,
-                url: $scope.requestParams.url + '/' + key
+                url: $scope.requestParams.url + '/' + name + '/' + key
             };
             if (requestParams.method === 'GET') {
                 requestParams.params = $scope.parameters[key];
@@ -51,10 +55,19 @@ angular.module('rainbowClientApp')
             }
 
             $http(requestParams).then(function(data) {
+                if (data.data.status){
+                    if (!!data.data.data) {
+                        alert('Return: ' + data.data.data);
+                    }
+                } else {
+                    alert('Exception!: ' + data.data.message);
+                }
                 console.log('allOK');
+                $scope.methodErrorResponseText = ''
                 $scope.methodSuccessResponseText = JSON.stringify(data);
             }, function(data) {
                 console.log('wrong');
+                $scope.methodSuccessResponseText = ''
                 $scope.methodErrorResponseText = JSON.stringify(data);
                 console.log(data);
             });
