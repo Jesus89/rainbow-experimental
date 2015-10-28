@@ -9,9 +9,10 @@
  */
 angular.module('rainbowClientApp')
     .controller('MainCtrl', function($scope, $http) {
+        var ip_address = location.host.split(':')[0];
         $scope.requestParams = {
             method: 'GET',
-            url: 'http://localhost:8081'
+            url: 'http://' + ip_address + ':8081'
         }
 
         $scope.successResponse = null;
