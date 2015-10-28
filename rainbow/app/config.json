@@ -6,17 +6,14 @@
          "methods":{
             "open":{
                "doc":"Open serial port",
-               "engine":"open",
                "args":null
             },
             "close":{
                "doc":"Close serial port",
-               "engine":"close",
                "args":null
             },
             "led":{
                "doc":"Turn on/off a led",
-               "engine":"led",
                "args":[
                   "value",
                   "times"

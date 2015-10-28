@@ -37,7 +37,6 @@ def build_config(_import, _class):
         if name[0] != '_':
             m = {}
             m['doc'] = method.__doc__
-            m['engine'] = name
             args = inspect.getargspec(method).args
             if len(args) > 1:
                 m['args'] = args[1:]
