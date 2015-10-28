@@ -44,7 +44,7 @@ def execute(module, method):
 def function(f):
     response = Response()
     try:
-        exec(f)
+        exec('response.data=' + f)
     except Exception as e:
         response.status = False
         response.message = str(e)
