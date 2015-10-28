@@ -1,9 +1,8 @@
 {
-   "modules":[
-      {
+   "modules":{
+      "zum":{
          "import":"rainbow.modules.zum",
          "class":"Zum",
-         "name":"zum",
          "methods":{
             "open":{
                "doc":"Open serial port",
@@ -19,10 +18,11 @@
                "doc":"Turn on/off a led",
                "engine":"led",
                "args":[
-                  "status"
+                  "value",
+                  "times"
                ]
             }
          }
       }
-   ]
+   }
 }

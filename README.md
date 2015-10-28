@@ -1,5 +1,7 @@
 # Rainbow server
 
+Web wrapper for Python modules
+
 ## Installation
 
 ### Python requirements

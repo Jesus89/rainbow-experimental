@@ -16,6 +16,12 @@ class Zum(object):
         self._serial.port = '/dev/ttyUSB0'
         self._serial.baudrate = 9600
 
+    def port(self, port='/dev/ttyUSB0'):
+        self._serial.port = port
+
+    def baudrate(self, baudrate=9600):
+        self._serial.baudrate = baudrate
+
     def open(self):
         """Open serial port"""
         self._serial.open()
