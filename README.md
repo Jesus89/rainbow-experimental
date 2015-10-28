@@ -15,5 +15,5 @@ pip install -r requirements.txt
 Launch the server
 
 ```bash
-python launcher.py
+python launcher.py '/path/to/your/file.py'
 ```
