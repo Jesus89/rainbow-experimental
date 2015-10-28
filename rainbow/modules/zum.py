@@ -16,12 +16,6 @@ class Zum(object):
         self._serial.port = '/dev/ttyUSB0'
         self._serial.baudrate = 9600
 
-    def port(self, port='/dev/ttyUSB0'):
-        self._serial.port = port
-
-    def baudrate(self, baudrate=9600):
-        self._serial.baudrate = baudrate
-
     def open(self):
         """Open serial port"""
         self._serial.open()
@@ -30,14 +24,20 @@ class Zum(object):
     def close(self):
         """Close serial port"""
         self._serial.close()
-        return not self._serial.isOpen()
 
-    def led(self, value, times):
-        """Turn on/off a led"""
-        if value == 'on':
-            for i in range(int(times)):
-                self._send_wait_msg('on\n')
-                self._send_wait_msg('\n')
+    def blink_led(self, times):
+        """Blink the led"""
+        for i in range(int(times)):
+            self._send_wait_msg('on\n')
+            self._send_wait_msg('\n')
+
+    def led_on(self):
+        """Turn on the led"""
+        self._send_wait_msg('on\n')
+
+    def led_off(self):
+        """Turn off the led"""
+        self._send_wait_msg('\n')
 
     def _send_wait_msg(self, msg):
         self._serial.write(msg.encode())
