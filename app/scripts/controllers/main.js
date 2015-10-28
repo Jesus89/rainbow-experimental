@@ -61,7 +61,7 @@ angular.module('rainbowClientApp')
                         alert('Return: ' + data.data.data);
                     }
                 } else {
-                    alert('Exception!: ' + data.data.message);
+                    alert('Exception: ' + data.data.message);
                 }
                 console.log('allOK');
                 $scope.methodErrorResponseText = ''

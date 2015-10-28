@@ -20,9 +20,9 @@
         <textarea rows="10" cols="50" data-ng-model="errorResponseText"></textarea>
     </div>
 </div>-->
-<div class="form" data-ng-repeat="(name, module) in successResponse.data.modules">
+<div class="form" data-ng-repeat="(name, module) in successResponse.data">
     <h1>{{name}}</h1>
-    <div class="method" data-ng-repeat="(key, value) in module.methods">
+    <div class="method" data-ng-repeat="(key, value) in module">
         <h3>{{key}}</h3>
         <h5>{{value.doc}}</h5>
         <div class="args" data-ng-repeat="arg in value.args">
