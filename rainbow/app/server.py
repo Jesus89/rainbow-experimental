@@ -54,4 +54,4 @@ def function(f):
         return str(response)
 
 
-run(app, host='localhost', port=8081, debug=True)
+run(app, host='0.0.0.0', port=8081, debug=True)
