@@ -13,7 +13,7 @@ angular.module('rainbowClientApp')
         $scope.requestParams = {
             method: 'GET',
             url: 'http://' + ip_address + ':8081'
-        }
+        };
 
         $scope.successResponse = null;
         $scope.errorResponse = null;
@@ -34,15 +34,15 @@ angular.module('rainbowClientApp')
                 $scope.successResponseText = '';
                 $scope.errorResponseText = JSON.stringify(data);
             });
-        }
+        };
 
         $scope.doClear = function() {
-            $scope.successResponse = null
-        }
+            $scope.successResponse = null;
+        };
 
         $scope.stringify = function(object) {
             return JSON.stringify(object);
-        }
+        };
 
         $scope.doMethodRequest = function(name, key) {
             var requestParams = {
@@ -56,21 +56,21 @@ angular.module('rainbowClientApp')
             }
 
             $http(requestParams).then(function(data) {
-                if (data.data.status){
+                /*if (data.data.status){
                     if (!!data.data.data) {
                         alert('Return: ' + data.data.data);
                     }
                 } else {
                     alert('Exception: ' + data.data.message);
-                }
+                }*/
                 console.log('allOK');
-                $scope.methodErrorResponseText = ''
+                $scope.methodErrorResponseText = '';
                 $scope.methodSuccessResponseText = JSON.stringify(data);
             }, function(data) {
                 console.log('wrong');
-                $scope.methodSuccessResponseText = ''
+                $scope.methodSuccessResponseText = '';
                 $scope.methodErrorResponseText = JSON.stringify(data);
                 console.log(data);
             });
-        }
+        };
     });
