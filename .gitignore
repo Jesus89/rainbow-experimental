@@ -3,3 +3,6 @@
 /.tmp
 /.sass-cache
 /bower_components
+/electron/app
+/electron/node_modules
+Rainbow-*
