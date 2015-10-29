@@ -20,8 +20,19 @@ def build_config(instances):
                 m = {}
                 m['doc'] = method.__doc__
                 args = inspect.getargspec(method).args
-                if len(args) > 1:
-                    m['args'] = args[1:]
+                nargs = len(args)
+                if nargs > 1:
+                    defaults = inspect.getargspec(method).defaults
+                    if defaults is None:
+                        defaults = []
+                    else:
+                        defaults = list(defaults)
+                    defaults = [None] * (nargs - len(defaults)) + defaults
+                    m['args'] = {}
+                    for i in range(1, nargs):
+                        argument = {}
+                        argument[args[i]] = defaults[i]
+                        m['args'].update(argument)
                 else:
                     m['args'] = None
                 methods_dict[name] = m
