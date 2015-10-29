@@ -19,7 +19,6 @@ def start(host='0.0.0.0', port=8081):
 
 
 def initialize(_instances):
-    print _instances
     global instances, config
     instances = _instances
     config = build_config(_instances)
