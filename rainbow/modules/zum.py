@@ -28,7 +28,7 @@ class Zum(object):
     def blink_led(self, value, times=5, msg='on'):
         """Blink the led"""
         for i in range(int(times)):
-            self._send_wait_msg(value + '\n')
+            self._send_wait_msg(unicode(msg) + '\n')
             self._send_wait_msg('\n')
 
     def led_on(self):
