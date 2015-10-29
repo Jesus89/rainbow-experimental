@@ -9,10 +9,9 @@
  */
 angular.module('rainbowClientApp')
     .controller('MainCtrl', function($scope, $http) {
-        var ip_address = location.host.split(':')[0];
         $scope.requestParams = {
             method: 'GET',
-            url: 'http://' + ip_address + ':8081'
+            url: 'http://0.0.0.0:8081'
         };
 
         $scope.successResponse = null;
@@ -56,13 +55,13 @@ angular.module('rainbowClientApp')
             }
 
             $http(requestParams).then(function(data) {
-                /*if (data.data.status){
+                if (data.data.status){
                     if (!!data.data.data) {
                         alert('Return: ' + data.data.data);
                     }
                 } else {
                     alert('Exception: ' + data.data.message);
-                }*/
+                }
                 console.log('allOK');
                 $scope.methodErrorResponseText = '';
                 $scope.methodSuccessResponseText = JSON.stringify(data);

@@ -25,9 +25,9 @@
     <div class="method" data-ng-repeat="(key, value) in module">
         <h3>{{key}}</h3>
         <h5>{{value.doc}}</h5>
-        <div class="args" data-ng-repeat="arg in value.args">
+        <div class="args" data-ng-repeat="(arg, default) in value.args">
             <label>{{arg}}</label>
-            <input type="text" size=10 data-ng-model="parameters[key][arg]"></input>
+            <input type="text" placeholder="{{default}}" size=10 ng-model="parameters[key][arg]" />
         </div>
         <!--<select data-ng-model="requestParams.method">
             <option>GET</option>
