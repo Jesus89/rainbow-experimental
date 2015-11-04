@@ -11,7 +11,7 @@ setup(name='Rainbow',
       author_email='jesus.arroyo@bq.com',
       url='https://github.com/bqlabs/rainbow-server',
       license='GPLv2',
-      install_requires=open('requirements.txt').read(),
+      install_requires=['bottle==0.12.9'],
       entry_points={
           'console_scripts': [
               'rainbow = rainbow:main'
