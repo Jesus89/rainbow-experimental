@@ -12,6 +12,8 @@ python setup.py install
 
 ## Execute
 
+Put your Python module path in: ~/.rainbow/rainbow.conf
+
 ```bash
-rainbow '/path/to/your/file.py'
+rainbow
 ```
