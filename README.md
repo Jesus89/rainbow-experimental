@@ -6,16 +6,12 @@ It can be used with [Rainbow client](https://github.com/bqlabs/rainbow-client/).
 
 ## Installation
 
-### Python requirements
-
 ```bash
-pip install -r requirements.txt
+python setup.py install
 ```
 
 ## Execute
 
-Launch the server
-
 ```bash
-python launcher.py '/path/to/your/file.py'
+rainbow '/path/to/your/file.py'
 ```
