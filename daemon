@@ -1,0 +1,29 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          rainbow
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Rainbow server
+# Description:       Rainbow server is a Python wrapper that creates
+#                    a REST API from Python modules.
+### END INIT INFO
+
+case "$1" in
+  start)
+    echo "Starting rainbow"
+    start-stop-daemon --background --no-close --exec /usr/local/bin/rainbow --start
+    ;;
+  stop)
+    echo "Stopping rainbow"
+    killall rainbow
+    ;;
+  *)
+    echo "Usage: /etc/init.d/rainbow {start|stop}"
+    exit 1
+    ;;
+esac
+
+exit 0
