@@ -1,0 +1,31 @@
+Metadata-Version: 1.0
+Name: Rainbow
+Version: 0.1.1
+Summary: Web wrapper for Python modules
+Home-page: https://github.com/bqlabs/rainbow-server
+Author: Jesús Arroyo Torrens
+Author-email: jesus.arroyo@bq.com
+License: GPLv2
+Description: # Rainbow server
+        
+        Web wrapper for Python modules. It generates a REST API from your Python class.
+        
+        It can be used with [Rainbow client](https://github.com/bqlabs/rainbow-client/).
+        
+        ## Installation
+        
+        ### Python requirements
+        
+        ```bash
+        pip install -r requirements.txt
+        ```
+        
+        ## Execute
+        
+        Launch the server
+        
+        ```bash
+        python launcher.py '/path/to/your/file.py'
+        ```
+        
+Platform: UNKNOWN
