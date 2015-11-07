@@ -3,3 +3,11 @@ server/*.egg*
 server/build/
 server/dist/
 server/venv/
+client/node_modules
+client/dist
+client/.tmp
+client/.sass-cache
+client/bower_components
+client/electron/app
+client/electron/node_modules
+client/Rainbow-*

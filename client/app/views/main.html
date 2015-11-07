@@ -1,0 +1,52 @@
+<div class="jumbotron">
+    <!--<select data-ng-model="requestParams.method">
+        <option>GET</option>
+        <option>POST</option>
+        <option>PUT</option>
+        <option>DELETE</option>
+        <option>HEAD</option>
+    </select>-->
+    <input type="text" data-ng-model="requestParams.url" />
+    <button data-ng-click="doRequest()">Load modules</button>
+    <button data-ng-click="doClear()">Clear</button>
+</div>
+<!--<div class="responses">
+    <div class="response-container">
+        <label class="success">Success</label>
+        <textarea rows="10" cols="50" data-ng-model="successResponseText"></textarea>
+    </div>
+    <div class="response-container">
+        <label class="error">Error</label>
+        <textarea rows="10" cols="50" data-ng-model="errorResponseText"></textarea>
+    </div>
+</div>-->
+<div class="form" data-ng-repeat="(name, module) in successResponse.data">
+    <h1>{{name}}</h1>
+    <div class="method" data-ng-repeat="(key, value) in module">
+        <h3>{{key}}</h3>
+        <h5>{{value.doc}}</h5>
+        <div class="args" data-ng-repeat="(arg, default) in value.args">
+            <label>{{arg}}</label>
+            <input type="text" placeholder="{{default}}" size=10 ng-model="parameters[key][arg]" />
+        </div>
+        <!--<select data-ng-model="requestParams.method">
+            <option>GET</option>
+            <option>POST</option>
+            <option>PUT</option>
+            <option>DELETE</option>
+            <option>HEAD</option>
+        </select>-->
+        <button data-ng-click="doMethodRequest(name, key)">Execute</button>
+    </div>
+</div>
+<!--<div class="responses">
+    <h2>Methods Results</h2>
+    <div class="response-container">
+        <label class="success">Success</label>
+        <textarea rows="10" cols="50" data-ng-model="methodSuccessResponseText"></textarea>
+    </div>
+    <div class="response-container">
+        <label class="error">Error</label>
+        <textarea rows="10" cols="50" data-ng-model="methodErrorResponseText"></textarea>
+    </div>
+</div>-->
