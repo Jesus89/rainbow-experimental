@@ -6,6 +6,7 @@ It can be used with [Rainbow server](https://github.com/bqlabs/rainbow-server).
 
 ## Build & development
 
+Install `nodejs` and all the project's dependencies `npm install`.
 Run `grunt` for building and `grunt serve` for preview.
 
 ### Electron
