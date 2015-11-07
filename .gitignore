@@ -1,8 +1,8 @@
-/node_modules
-/dist
-/.tmp
-/.sass-cache
-/bower_components
-/electron/app
-/electron/node_modules
-Rainbow-*
+client/node_modules
+client/dist
+client/.tmp
+client/.sass-cache
+client/bower_components
+client/electron/app
+client/electron/node_modules
+client/Rainbow-*
